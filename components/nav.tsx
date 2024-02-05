@@ -1,8 +1,9 @@
-"use client"
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import HamburgerIcon from '@/components/icons/hamburger-icon';
+import WindIcon from '@/components/icons/wind-icon';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +14,9 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="w-full justify-between flex items-center">
             <Link href="/">
-              <div className="flex-shrink-0 text-xl font-bold">
-                ZephyrShare
+              <div className="flex items-center">
+                <div className="flex-shrink-0 text-xl font-bold">ZephyrShare</div>
+                <WindIcon className="ml-1" size={16} />
               </div>
             </Link>
             <div className="hidden md:block">
@@ -38,10 +40,7 @@ export default function Navbar() {
             </div>
           </div>
           <div className="block md:hidden">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-600 hover:text-gray-400 focus:outline-none"
-            >
+            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-gray-400 focus:outline-none">
               <HamburgerIcon aria-hidden="true" />
             </button>
           </div>

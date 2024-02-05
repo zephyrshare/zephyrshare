@@ -5,6 +5,8 @@ import { editUser } from "@/lib/actions";
 
 export default async function SettingsPage() {
   const session = await getSession();
+
+  console.log('session in settings', session)
   if (!session) {
     redirect("/login");
   }
@@ -16,7 +18,7 @@ export default async function SettingsPage() {
         </h1>
         <Form
           title="Name"
-          description="Your name on this app."
+          description="Your name"
           helpText="Please use 32 characters maximum."
           inputAttrs={{
             name: "name",

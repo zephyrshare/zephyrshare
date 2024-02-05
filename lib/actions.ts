@@ -9,6 +9,8 @@ export const editUser = async (
   key: string,
 ) => {
   const session = await getSession();
+
+  console.log('session', session, 'formData', formData, 'key', key);
   if (!session?.user.id) {
     return {
       error: "Not authenticated",
@@ -25,6 +27,7 @@ export const editUser = async (
         [key]: value,
       },
     });
+    console.log('response', response);
     return response;
   } catch (error: any) {
     if (error.code === "P2002") {
@@ -36,5 +39,29 @@ export const editUser = async (
         error: error.message,
       };
     }
+  }
+};
+
+
+export const addOrganization = async (
+  formData: FormData,
+) => {
+  const name = formData.get('name') as string;
+  const description = formData.get('description') as string;
+  const logo = formData.get('logo') as string;
+
+  try {
+    const organization = await prisma.organization.create({
+      data: {
+        name,
+        description,
+        logo,
+      },
+    });
+    return organization;
+  } catch (error: any) {
+    return {
+      error: error.message,
+    };
   }
 };

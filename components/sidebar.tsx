@@ -1,91 +1,51 @@
 'use client';
 
 import Link from 'next/link';
-import {
-  ArrowLeft,
-  BarChart3,
-  Edit3,
-  Globe,
-  Layout,
-  LayoutDashboard,
-  Megaphone,
-  Menu,
-  Newspaper,
-  Settings,
-  FileCode,
-  Github,
-} from 'lucide-react';
-import { useParams, usePathname } from 'next/navigation';
+import { Globe, LayoutDashboard, Megaphone, Menu, Newspaper, Settings } from 'lucide-react';
+import { useParams, usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import WindIcon from '@/components/icons/wind-icon';
 
 const externalLinks = [
   {
     name: 'Read announcement',
-    href: 'https://vercel.com/blog/platforms-starter-kit',
+    href: `${process.env.NEXTAUTH_URL}`,
     icon: <Megaphone width={18} />,
-  },
-  {
-    name: 'Star on GitHub',
-    href: 'https://github.com/vercel/platforms',
-    icon: <Github width={18} />,
-  },
-  {
-    name: 'Read the guide',
-    href: 'https://vercel.com/guides/nextjs-multi-tenant-application',
-    icon: <FileCode width={18} />,
-  },
-  {
-    name: 'View demo site',
-    href: 'https://demo.vercel.pub',
-    icon: <Layout width={18} />,
-  },
-  {
-    name: 'Deploy your own',
-    href: 'https://vercel.com/templates/next.js/platforms-starter-kit',
-    icon: (
-      <svg
-        width={18}
-        viewBox="0 0 76 76"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="py-1 text-black dark:text-white"
-      >
-        <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor" />
-      </svg>
-    ),
   },
 ];
 
 export default function Sidebar({ children }: { children: ReactNode }) {
+  const segments = useSelectedLayoutSegments();
+
   const tabs = useMemo(() => {
     return [
       {
-        name: 'Overview',
+        name: 'Dashboard',
         href: '/',
-        isActive: true,
+        isActive: segments.includes("dashboard"),
         icon: <LayoutDashboard width={18} />,
       },
       {
         name: 'Organizations',
         href: '/organizations',
-        isActive: false,
+        isActive: segments.includes("organizations"),
         icon: <Globe width={18} />,
       },
       {
         name: 'Agreements',
         href: '/agreements',
-        isActive: false,
+        isActive: segments.includes("agreements"),
         icon: <Newspaper width={18} />,
       },
       {
         name: 'Settings',
         href: '/settings',
-        isActive: false,
+        isActive: segments.includes("settings"),
         icon: <Settings width={18} />,
       },
     ];
-  }, []);
+  }, [segments]);
 
   const [showSidebar, setShowSidebar] = useState(false);
 
@@ -114,32 +74,10 @@ export default function Sidebar({ children }: { children: ReactNode }) {
       >
         <div className="grid gap-2">
           <div className="flex items-center space-x-2 rounded-lg px-2 py-1.5">
-            <a
-              href="https://vercel.com/templates/next.js/platforms-starter-kit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-lg p-1.5 hover:bg-stone-200 dark:hover:bg-stone-700"
-            >
-              <svg
-                width="26"
-                viewBox="0 0 76 65"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-black dark:text-white"
-              >
-                <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor" />
-              </svg>
-            </a>
-            <div className="h-6 rotate-[30deg] border-l border-stone-400 dark:border-stone-500" />
-            <Link href="/" className="rounded-lg p-2 hover:bg-stone-200 dark:hover:bg-stone-700">
-              <Image
-                src="/logo.png"
-                width={24}
-                height={24}
-                alt="Logo"
-                className="dark:scale-110 dark:rounded-full dark:border dark:border-stone-400"
-              />
-            </Link>
+            <div className="flex items-center">
+              <p className="text-xl font-bold">Zephyr Share</p>
+              <WindIcon className="ml-1" size={16} />
+            </div>
           </div>
           <div className="grid gap-1">
             {tabs.map(({ name, href, isActive, icon }) => (

@@ -24,9 +24,9 @@ export default function EmailLoginButton() {
 
   return (
     <>
-      <form className="flex flex-col p-4 pt-8 sm:px-16 gap-4">
+      <form className="flex flex-col pt-8 gap-4">
         <Input
-          className=" border-4"
+          className=" border-2 w-full text-center"
           placeholder="jsmith@company.co"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
