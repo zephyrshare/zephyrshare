@@ -27,7 +27,7 @@ export default function LoginPage() {
         >
           <EmailLoginButton />
         </Suspense>
-        <p className="text-center italic">or</p>
+        <p className="text-center text-sm">or</p>
         <Suspense
           fallback={
             <div className="my-2 h-10 w-full rounded-md border border-stone-200 bg-stone-100 dark:border-stone-700 dark:bg-stone-800" />
