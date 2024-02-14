@@ -2,7 +2,6 @@ import { getOrganizations } from '@/lib/actions';
 import DataTable from '@/components/ui/data-table';
 import { columns } from './organizations-table-columns';
 import AddOrganizationButton from './add-organization-dialog-button';
-// import { Organization } from '@/lib/types';
 
 export default async function Page() {
   const organizations = await getOrganizations();
