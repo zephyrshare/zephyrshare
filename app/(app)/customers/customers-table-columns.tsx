@@ -11,18 +11,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { deleteOrganization } from '@/lib/actions';
-import { Organization } from '@/lib/types';
+import { deleteCustomer } from '@/lib/actions';
+import { Customer } from '@/lib/types';
 
-export const columns: ColumnDef<Organization>[] = [
+export const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
     cell: ({ row }) => {
-      const organization = row.original;
+      const customer = row.original;
       return (
-        <Link href={`/organizations/${organization.id}`}>
-          <div>{organization.name}</div>
+        <Link href={`owner/customers/${customer.id}`}>
+          <div>{customer.name}</div>
         </Link>
       );
     },
@@ -34,10 +34,10 @@ export const columns: ColumnDef<Organization>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const organization = row.original;
+      const customer = row.original;
 
       function handleDelete() {
-        deleteOrganization(organization.id);
+        deleteCustomer(customer.id);
       }
 
       return (
@@ -52,15 +52,15 @@ export const columns: ColumnDef<Organization>[] = [
             <DropdownMenuItem>Add Member</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => {}}>
-              <Link href={`/organizations/${organization.id}`}>View Organziation</Link>
+              <Link href={`customers/${customer.id}`}>View Customer</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Edit Organziation</DropdownMenuItem>
+            <DropdownMenuItem>Edit Customer</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={handleDelete}
               className="flex cursor-pointer items-center text-destructive focus:text-destructive"
             >
-              <div className="text-red">Delete Organization</div>
+              <div className="text-red">Delete Customer</div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

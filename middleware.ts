@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { getBaseUrlPath } from '@/lib/user-roles-privileges';
 
 export const config = {
   matcher: [
@@ -16,34 +17,32 @@ export const config = {
 
 export default async function middleware(req: NextRequest) {
   const session = await getToken({ req });
+
   const loginUrl = new URL('/login', req.url);
-  const dashboardUrl = new URL('/dashboard', req.url);
   const homeUrl = new URL('/', req.url);
   const path = req.nextUrl.pathname;
 
-  // Allow unauthenticated user to access "/"
-  if (!session && path === '/') {
-    return NextResponse.next();
+  /**
+   * Unauthenticated users
+   */
+  if (!session) {
+    // Allow unauthenticated user to access "/"
+    if (path === '/' || path === '/about' || path === '/login' || path === 'example') {
+      return NextResponse.next();
+    }
   }
 
-  // Allow unauthenticated user to access "/example"
-  if (!session && path === '/example') {
-    return NextResponse.next();
-  }
+  /**
+   * Authenticated users
+   */
+  if (session) {
+    const baseUrlPath = getBaseUrlPath(session?.user.role);
 
-  // Allow unauthenticated user to access "/about"
-  if (!session && path === '/about') {
-    return NextResponse.next();
-  }
-
-  // Redirect to dashboard if authenticated and on login page
-  if (session && path == '/login') {
-    return NextResponse.redirect(dashboardUrl);
-  }
-
-  // Redirect to dashboard if authenticated and on home page
-  if (session && path == '/') {
-    return NextResponse.redirect(dashboardUrl);
+    // Redirect to dashboard if authenticated and on login page
+    if (path === '/login' || path === '/') {
+      const dashboardUrl = new URL(`${baseUrlPath}/dashboard`, req.url);
+      return NextResponse.redirect(dashboardUrl);
+    }
   }
 
   return NextResponse.next();

@@ -1,10 +1,13 @@
 'use client';
 
+// TODO - consider the problem of possibly exposing all UserRoles to all users by importing getBaseUrlPath from '@/lib/user-roles-privileges'?
+
 import Link from 'next/link';
-import { Globe, LayoutDashboard, Megaphone, Menu, Newspaper, Settings } from 'lucide-react';
+import { Globe, LayoutDashboard, Megaphone, Menu, Newspaper, Settings, HeartHandshake, FileArchive } from 'lucide-react';
 import { useParams, usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { getBaseUrlPath } from '@/lib/user-roles-privileges';
 import WindIcon from '@/components/icons/wind-icon';
 
 const externalLinks = [
@@ -17,31 +20,45 @@ const externalLinks = [
 
 export default function Sidebar({ children }: { children: ReactNode }) {
   const segments = useSelectedLayoutSegments();
+  const { data: session } = useSession();
+  const baseUrlPath = getBaseUrlPath(session?.user?.role);
 
   const tabs = useMemo(() => {
     return [
       {
         name: 'Dashboard',
-        href: '/',
-        isActive: segments.includes("dashboard"),
+        href: `${baseUrlPath}/dashboard`,
+        isActive: segments.includes('dashboard'),
         icon: <LayoutDashboard width={18} />,
       },
       {
-        name: 'Organizations',
-        href: '/organizations',
-        isActive: segments.includes("organizations"),
+        name: 'Customers',
+        href: `${baseUrlPath}/customers`,
+        isActive: segments.includes('customers'),
         icon: <Globe width={18} />,
       },
       {
         name: 'Agreements',
-        href: '/agreements',
-        isActive: segments.includes("agreements"),
+        href: `${baseUrlPath}/agreements`,
+        isActive: segments.includes('agreements'),
         icon: <Newspaper width={18} />,
       },
       {
+        name: 'Contracts',
+        href: `${baseUrlPath}/contracts`,
+        isActive: segments.includes('contracts'),
+        icon: <HeartHandshake width={18} />,
+      },
+      {
+        name: 'Data Files',
+        href: `${baseUrlPath}/datafiles`,
+        isActive: segments.includes('datafiles'),
+        icon: <FileArchive width={18} />,
+      },
+      {
         name: 'Settings',
-        href: '/settings',
-        isActive: segments.includes("settings"),
+        href: `${baseUrlPath}/settings`,
+        isActive: segments.includes('settings'),
         icon: <Settings width={18} />,
       },
     ];

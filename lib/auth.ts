@@ -19,10 +19,11 @@ export const authOptions: NextAuthOptions = {
           gh_username: profile.login,
           email: profile.email,
           image: profile.avatar_url,
+          role: 'OWNER_ADMIN', // Default role for now
         };
       },
     }),
-    EmailProvider({
+    EmailProvider({ // TODO: how to set the default role for email signups?
       async sendVerificationRequest({ identifier, url }) {
         if (process.env.NODE_ENV === 'development') {
           console.log(`Login link: ${url}`);
@@ -70,6 +71,8 @@ export const authOptions: NextAuthOptions = {
         id: token.sub,
         // @ts-expect-error
         username: token?.user?.username || token?.user?.gh_username,
+        // @ts-expect-error
+        role: token?.user?.role, // Include the user's role in the session
       };
       return session;
     },
@@ -84,6 +87,7 @@ export function getSession() {
       username: string;
       email: string;
       image: string;
+      role: string;
     };
   } | null>;
 }

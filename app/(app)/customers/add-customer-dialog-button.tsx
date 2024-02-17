@@ -18,18 +18,18 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { addOrganization } from '@/lib/actions';
+import { addCustomer } from '@/lib/actions';
 import { minimumDelay } from '@/lib/utils';
 
 const formSchema = z.object({
-  organizationName: z
+  customerName: z
     .string()
-    .min(1, 'Organization Name is required.')
-    .max(50, 'Organization Name must not exceed 50 characters.'),
-  organizationDescription: z.string().max(400, 'Organization Description must not exceed 400 characters.').optional(),
+    .min(1, 'Customer Name is required.')
+    .max(50, 'Customer Name must not exceed 50 characters.'),
+  customerDescription: z.string().max(400, 'Customer Description must not exceed 400 characters.').optional(),
 });
 
-export default function AddOrganizationButton() {
+export default function AddCustomerButton() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +43,7 @@ export default function AddOrganizationButton() {
 
     await minimumDelay(async () => {
       try {
-        await addOrganization(values);
+        await addCustomer(values);
         form.reset(); // This will reset the form fields to their initial state
       } catch (error) {
         console.error('Error submitting form', error);
@@ -57,25 +57,25 @@ export default function AddOrganizationButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="default" size="default" className="w-36">
-          Add Organization
+          Add Customer
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add an Organization</DialogTitle>
-          <DialogDescription>Add a new organziation here. Click add when you're done.</DialogDescription>
+          <DialogTitle>Add a Customer</DialogTitle>
+          <DialogDescription>Add a new customer here. Click add when you're done.</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
-                name="organizationName"
+                name="customerName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Organization Name</FormLabel>
+                    <FormLabel>Customer Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Organization Name" {...field} />
+                      <Input placeholder="Your Customer's Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -83,12 +83,12 @@ export default function AddOrganizationButton() {
               />
               <FormField
                 control={form.control}
-                name="organizationDescription"
+                name="customerDescription"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Organization Description</FormLabel>
+                    <FormLabel>Customer Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Describe your organization (Optional)" {...field} />
+                      <Textarea placeholder="Describe your customer (Optional)" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

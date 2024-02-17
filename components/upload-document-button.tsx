@@ -21,13 +21,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { minimumDelay } from '@/lib/utils';
+import { addAgreement } from '@/lib/actions';
 
 const formSchema = z.object({
-  organizationName: z
-    .string()
-    .min(1, 'Organization Name is required.')
-    .max(50, 'Organization Name must not exceed 50 characters.'),
-  organizationDescription: z.string().max(400, 'Organization Description must not exceed 400 characters.').optional(),
+  customerName: z.string().min(1, 'Customer Name is required.').max(50, 'Customer Name must not exceed 50 characters.'),
+  customerDescription: z.string().max(400, 'Customer Description must not exceed 400 characters.').optional(),
 });
 
 export default function UploadDocumentButton() {
@@ -46,7 +44,7 @@ export default function UploadDocumentButton() {
 
   //   await minimumDelay(async () => {
   //     try {
-  //       await addOrganization(values);
+  //       await addCustomer(values);
   //       form.reset(); // This will reset the form fields to their initial state
   //     } catch (error) {
   //       console.error('Error submitting form', error);
@@ -55,6 +53,35 @@ export default function UploadDocumentButton() {
   //   setLoading(false);
   //   setOpen(false);
   // }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!inputFileRef.current?.files) {
+      throw new Error('No file selected');
+    }
+
+    const file = inputFileRef.current.files[0];
+
+    setLoading(true);
+
+    const newBlob = await upload(file.name, file, {
+      access: 'public',
+      handleUploadUrl: '/api/upload/agreement',
+    });
+
+    const newAgreement = await addAgreement({
+      name: file.name,
+      file: newBlob.url,
+      contentType: newBlob.contentType,
+    });
+
+    console.log('newBlob', newBlob);
+
+    setBlob(newBlob);
+    setLoading(false);
+    setOpen(false);
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -68,24 +95,7 @@ export default function UploadDocumentButton() {
           <DialogTitle>Upload an Agreement</DialogTitle>
           <DialogDescription>Upload a new agreement here. Click upload when you're done.</DialogDescription>
         </DialogHeader>
-        <form
-          onSubmit={async (event) => {
-            event.preventDefault();
-
-            if (!inputFileRef.current?.files) {
-              throw new Error('No file selected');
-            }
-
-            const file = inputFileRef.current.files[0];
-
-            const newBlob = await upload(file.name, file, {
-              access: 'public',
-              handleUploadUrl: '/api/upload/agreement',
-            });
-
-            setBlob(newBlob);
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <input name="file" ref={inputFileRef} type="file" required />
           <button type="submit">Upload</button>
         </form>
