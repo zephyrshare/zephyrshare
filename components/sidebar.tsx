@@ -21,6 +21,7 @@ const externalLinks = [
 export default function Sidebar({ children }: { children: ReactNode }) {
   const segments = useSelectedLayoutSegments();
   const { data: session } = useSession();
+  // @ts-ignore
   const baseUrlPath = getBaseUrlPath(session?.user?.role);
 
   const tabs = useMemo(() => {
@@ -62,7 +63,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         icon: <Settings width={18} />,
       },
     ];
-  }, [segments]);
+  }, [segments, baseUrlPath]);
 
   const [showSidebar, setShowSidebar] = useState(false);
 

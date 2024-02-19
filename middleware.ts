@@ -36,6 +36,7 @@ export default async function middleware(req: NextRequest) {
    * Authenticated users
    */
   if (session) {
+    // @ts-ignore
     const baseUrlPath = getBaseUrlPath(session?.user.role);
 
     // Redirect to dashboard if authenticated and on login page
