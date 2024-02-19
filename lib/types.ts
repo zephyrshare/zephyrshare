@@ -15,8 +15,8 @@ export interface Agreement {
   file: string; // Assuming file is required
   contentType: string | null; // Assuming contentType is optional
   ownerId: string; // Assuming ownerId is a string
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | null;
+  endDate: Date | null;
   createdAt: Date; // Assuming createdAt is a date
   updatedAt: Date; // Assuming updatedAt is a date
 };
