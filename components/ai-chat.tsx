@@ -1,12 +1,14 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import Image from 'next/image';
 import { useChat } from 'ai/react';
-import { ArrowUp, User2, Shuffle } from 'lucide-react';
+import { ArrowUp, User2, Plus } from 'lucide-react'; // <User2 className="text-black-400" size={24} />
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipArrow } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { useSession } from 'next-auth/react';
 
 const promptIdeas = [
   'Can you give me a quick update for today?',
@@ -16,12 +18,14 @@ const promptIdeas = [
   'Which customers have not accessed data in the last 30 days?',
   'How many contracts in progress but not approved?',
   'How many contracts are expiring in the next 30 days?',
-  'Please create a new contract for a customer.'
+  'Please create a new contract for a customer.',
 ];
 
 export default function AIChat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { messages, input, handleInputChange, setInput, handleSubmit } = useChat();
+  const [visiblePrompts, setVisiblePrompts] = useState(promptIdeas.slice(0, 4)); // Initialize with the first 4 prompts
+  const { data: session } = useSession();
 
   async function handleSubmitPrompt() {
     if (input.length > 0) {
@@ -30,7 +34,15 @@ export default function AIChat() {
       // @ts-ignore
       const e = { preventDefault: () => {} } as React.FormEvent<HTMLFormElement>;
       handleSubmit(e);
+      return;
     }
+  }
+
+  function showMorePrompts() {
+    setVisiblePrompts((currentPrompts) => {
+      const nextVisibleCount = currentPrompts.length + 2;
+      return promptIdeas.slice(0, Math.min(nextVisibleCount, promptIdeas.length));
+    });
   }
 
   function handleButtonClick(text: string) {
@@ -70,15 +82,20 @@ export default function AIChat() {
             placeholder="Ask Zephyr Share..."
             onChange={handleInputChange}
             // when the user presses enter, the form will submit. HOWEVER, if the user presses shift+enter, the form will not submit.
-            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmitPrompt()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmitPrompt();
+              }
+            }}
             autoFocus
             rows={1}
           />
         </div>
-        <div className="pb-4 flex flex-wrap w-full">
-          {/* Start by displaying 4 random prompts from the array. At most, 4 sample prompts should be displayed */}
-          {promptIdeas.map((prompt) => (
+        <div className="pb-4 flex flex-wrap w-full relative">
+          {visiblePrompts.map((prompt: string, i: number) => (
             <Button
+              key={i}
               className="rounded-3xl px-2 py-0 h-8 mr-2 mt-2 font-normal text-sm"
               variant="outline"
               onClick={() => handleButtonClick(prompt)}
@@ -86,19 +103,36 @@ export default function AIChat() {
               {prompt}
             </Button>
           ))}
-          {/* Shuffle Icon here absolute positioned (within THIS parent div) bottom right 5 px each. When the shuffle is hovered, a tooltip over the Shuffle Icon shows saying "Shuffle prompts" (see other tooltip example). When the shuffle icon is clicked, 4 random prompts should be shown */}
+          <TooltipProvider delayDuration={50}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="absolute top-3 right-0 cursor-pointer" onClick={showMorePrompts}>
+                  <Plus className="text-black-400" size={20} />
+                  <TooltipContent sideOffset={5}>
+                    <p>Show more sample prompts</p>
+                  </TooltipContent>
+                </div>
+              </TooltipTrigger>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       {messages.map((m) => (
         <div key={m.id} className="flex items-top space-x-3 mt-6">
           <div className="flex-shrink-0">
-            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-              {m.role === 'user' ? (
-                <User2 className="text-black-400" size={24} />
-              ) : (
-                <span>ZS</span> // Placeholder for Zephyr Share, adjust as needed
-              )}
-            </div>
+            {m.role === 'user' ? (
+              <Image
+                src={session?.user?.image ?? `https://avatar.vercel.sh/${session?.user?.email}`}
+                width={50}
+                height={50}
+                alt={session?.user?.name ?? 'User avatar'}
+                className="h-10 w-10 rounded-full"
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                <span>ZS</span>
+              </div>
+            )}
           </div>
           <div className="flex flex-col">
             <h4 className="text-sm font-bold">{m.role === 'user' ? 'You' : 'Zephyr Share'}</h4>
