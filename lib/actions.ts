@@ -20,7 +20,7 @@ export const editUser = async (formData: FormData, _id: unknown, key: string) =>
   try {
     const response = await prisma.user.update({
       where: {
-        id: session.user.id,
+        id: session?.user.id,
       },
       data: {
         [key]: value,
@@ -149,7 +149,7 @@ export async function addAgreement(agreementData: any) {
     const newAgreement = await prisma.agreement.create({
       data: {
         ...agreementData,
-        ownerId: session.user.id,
+        ownerId: session?.user.id,
       },
     });
     console.log('Added agreement:', newAgreement);
