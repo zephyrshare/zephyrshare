@@ -9,19 +9,21 @@ datasource db {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  name          String?
-  username      String? // if you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
-  gh_username   String?
-  email         String?     @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  role          String      @default("OWNER_ADMIN")
-  accounts      Account[]  // User can have multiple Accounts (these are the OAuth accounts)
-  agreements    Agreement[]
-  sessions      Session[]
+  id             String        @id @default(cuid())
+  name           String?
+  username       String? // if you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
+  gh_username    String?
+  email          String?       @unique
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  role           String        @default("OWNER_ADMIN")
+  accounts       Account[] // User can have multiple Accounts (these are the OAuth accounts)
+  agreements     Agreement[]
+  sessions       Session[]
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
 }
 
 model Account {
@@ -64,25 +66,51 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Customer {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  logo        String?
-  createdAt   DateTime @default(now())
+model Organization {
+  id                  String                 @id @default(cuid())
+  name                String
+  description         String?
+  logo                String?
+  createdAt           DateTime               @default(now())
+  role                OrganizationRole       @default(BUYER)
+  users               User[]
+  agreements          Agreement[]
+  buyerRelationships  CustomerRelationship[] @relation("BuyerRelationships")
+  sellerRelationships CustomerRelationship[] @relation("SellerRelationships")
+}
+
+enum OrganizationRole {
+  BUYER
+  SELLER
+  BUYER_SELLER
+  ZEPHYR
+}
+
+model CustomerRelationship {
+  id                 String       @id @default(cuid())
+  buyerOrgId         String // The ID of the buying organization
+  sellerOrgId        String // The ID of the selling organization
+  createdAt          DateTime     @default(now()) // When this relationship was established
+  buyerOrganization  Organization @relation("BuyerRelationships", fields: [buyerOrgId], references: [id])
+  sellerOrganization Organization @relation("SellerRelationships", fields: [sellerOrgId], references: [id])
+
+  @@unique([buyerOrgId, sellerOrgId])
 }
 
 model Agreement {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  file        String // URL file location (S3, Vercel blob, etc.)
-  contentType String // Content Type of uploaded agreement (e.g. application/pdf, plain/text, etc.)
-  startDate   DateTime?
-  endDate     DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  ownerId     String // This field holds the foreign key.
-  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  id             String        @id @default(cuid())
+  name           String
+  description    String?
+  file           String // URL file location (S3, Vercel blob, etc.)
+  contentType    String // Content Type of uploaded agreement (e.g. application/pdf, plain/text, etc.)
+  startDate      DateTime?
+  endDate        DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  ownerId        String // This field holds the foreign key.
+  owner          User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?
+
   @@index([ownerId])
 }

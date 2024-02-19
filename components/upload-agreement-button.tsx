@@ -30,7 +30,7 @@ const formSchema = z.object({
   customerDescription: z.string().max(400, 'Customer Description must not exceed 400 characters.').optional(),
 });
 
-export default function UploadDocumentButton() {
+export default function UploadAgreementButton() {
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [currentFile, setCurrentFile] = useState<File | null>(null);

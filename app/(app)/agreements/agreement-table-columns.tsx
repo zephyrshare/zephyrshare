@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { deleteAgreement } from '@/lib/actions';
-import { Agreement } from '@/lib/types';
+import { Agreement } from '@prisma/client';
 
 export const columns: ColumnDef<Agreement>[] = [
   {

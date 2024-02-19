@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { Customer, Agreement } from '@/lib/types';
+import { Organization, Agreement } from '@prisma/client';
 
 export const editUser = async (formData: FormData, _id: unknown, key: string) => {
   const session = await getSession();
@@ -39,65 +39,65 @@ export const editUser = async (formData: FormData, _id: unknown, key: string) =>
 };
 
 // Assuming you're using TypeScript, if not, you can ignore the type annotations
-export const addCustomer = async ({
-  customerName,
-  customerDescription,
+export const addOrganization = async ({
+  organizationName,
+  organizationDescription,
 }: // Assuming 'logo' might also be a part of your form, or you can omit this if not.
 {
-  customerName: string;
-  customerDescription?: string;
+  organizationName: string;
+  organizationDescription?: string;
   // logo?: string; // Include this if your form actually includes a logo upload; otherwise, omit it
 }) => {
   try {
-    const customer = await prisma.customer.create({
+    const organization = await prisma.organization.create({
       data: {
-        name: customerName,
-        description: customerDescription,
+        name: organizationName,
+        description: organizationDescription,
         // Assuming 'logo' handling remains as is, or adjust according to your actual form data structure
         // logo: logo || null, // Adjust this logic based on how you're handling logos
       },
     });
-    return customer;
+    return organization;
   } catch (error: any) {
-    console.error('Error adding customer:', error);
+    console.error('Error adding organization:', error);
     return {
       error: error.message,
     };
   } finally {
     // Revalidate the cache for the invoices page and redirect the user.
-    revalidatePath('/customers');
-    redirect('/customers');
+    revalidatePath('/organizations');
+    redirect('/organizations');
   }
 };
 
-export const getCustomerById = async (id: string): Promise<Customer | null> => {
+export const getOrganizationById = async (id: string): Promise<Organization | null> => {
   try {
-    const customer = await prisma.customer.findUnique({
+    const organization = await prisma.organization.findUnique({
       where: {
         id,
       },
     });
-    if (!customer) {
-      console.error('Customer not found');
+    if (!organization) {
+      console.error('Organization not found');
       return null;
     }
     return {
-      id: customer.id,
-      name: customer.name,
-      description: customer.description,
-      logo: customer.logo, // Assuming 'logo' is a field in your Customer model
-      createdAt: customer.createdAt, // Assuming 'createdAt' is a field in your Customer model
+      id: organization.id,
+      name: organization.name,
+      description: organization.description,
+      logo: organization.logo, // Assuming 'logo' is a field in your Organization model
+      createdAt: organization.createdAt, // Assuming 'createdAt' is a field in your Organization model
     };
   } catch (error: any) {
-    console.error('Error fetching customer by ID:', error);
+    console.error('Error fetching organization by ID:', error);
     throw new Error(error.message);
   }
 };
 
-export const getCustomers = async (): Promise<Customer[]> => {
+export const getOrganizations = async (): Promise<Organization[]> => {
   try {
-    const customers = await prisma.customer.findMany();
-    return customers.map((c) => ({
+    const organizations = await prisma.organization.findMany();
+    return organizations.map((c) => ({
       id: c.id,
       name: c.name,
       description: c.description,
@@ -105,12 +105,12 @@ export const getCustomers = async (): Promise<Customer[]> => {
       createdAt: c.createdAt, // Assuming 'createdAt' exists in your Prisma model
     }));
   } catch (error: any) {
-    console.error('Error fetching customers:', error);
+    console.error('Error fetching organizations:', error);
     throw new Error(error.message); // Throw an error to be caught by the caller
   }
 };
 
-export const deleteCustomer = async (customerId: string) => {
+export const deleteOrganization = async (organizationId: string) => {
   const session = await getSession();
 
   // Check if the user is authenticated
@@ -121,19 +121,19 @@ export const deleteCustomer = async (customerId: string) => {
   }
 
   try {
-    const deletedCustomer = await prisma.customer.delete({
+    const deletedOrganization = await prisma.organization.delete({
       where: {
-        id: customerId,
+        id: organizationId,
       },
     });
-    console.log('Deleted customer:', deletedCustomer);
+    console.log('Deleted organization:', deletedOrganization);
 
-    // Optionally, revalidate the customers page to reflect the deletion
-    await revalidatePath('/customers');
+    // Optionally, revalidate the organizations page to reflect the deletion
+    await revalidatePath('/organizations');
 
-    return deletedCustomer;
+    return deletedOrganization;
   } catch (error: any) {
-    console.error('Error deleting customer:', error);
+    console.error('Error deleting organization:', error);
     return {
       error: error.message,
     };

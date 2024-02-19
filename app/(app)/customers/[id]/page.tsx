@@ -1,4 +1,4 @@
-import { getCustomerById } from '@/lib/actions';
+import { getOrganizationById } from '@/lib/actions';
 import { Customer } from '@/lib/types';
 
 export default async function CustomerPage({ params }: { params: { id: string } }) {
