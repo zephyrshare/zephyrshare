@@ -23,7 +23,7 @@ export default function AIChat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { messages, input, handleInputChange, setInput, handleSubmit } = useChat();
 
-  async function handleClickSubmit() {
+  async function handleSubmitPrompt() {
     if (input.length > 0) {
       // Create a new fake e: React.FormEvent<HTMLFormElement> to pass to handleSubmit
       // const e = new Event('e') as React.FormEvent<HTMLFormElement>;
@@ -52,7 +52,7 @@ export default function AIChat() {
                     'absolute right-4 top-3 h-8 w-8 rounded-md cursor-pointer flex justify-center items-center',
                     input.length > 0 ? 'bg-gray-700' : 'bg-gray-300'
                   )}
-                  onClick={handleClickSubmit}
+                  onClick={handleSubmitPrompt}
                 >
                   <ArrowUp className="text-grey" size={25} color="white" />
                 </div>
@@ -70,7 +70,7 @@ export default function AIChat() {
             placeholder="Ask Zephyr Share..."
             onChange={handleInputChange}
             // when the user presses enter, the form will submit. HOWEVER, if the user presses shift+enter, the form will not submit.
-            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmit(e)}
+            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmitPrompt()}
             autoFocus
             rows={1}
           />
@@ -86,7 +86,7 @@ export default function AIChat() {
               {prompt}
             </Button>
           ))}
-          {/* Shuffle Icon here absolute positioned bottom right 5 px each. When the shuffle is hovered, a tooltip shows saying "Shuffle prompts" (see other tooltip example). When the shuffle icon is clicked, 4 random prompts should be shown */}
+          {/* Shuffle Icon here absolute positioned (within THIS parent div) bottom right 5 px each. When the shuffle is hovered, a tooltip over the Shuffle Icon shows saying "Shuffle prompts" (see other tooltip example). When the shuffle icon is clicked, 4 random prompts should be shown */}
         </div>
       </div>
       {messages.map((m) => (
