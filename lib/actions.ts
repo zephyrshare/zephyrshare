@@ -8,8 +8,6 @@ import { Customer, Agreement } from '@/lib/types';
 
 export const editUser = async (formData: FormData, _id: unknown, key: string) => {
   const session = await getSession();
-
-  console.log('session', session, 'formData', formData, 'key', key);
   if (!session?.user.id) {
     return {
       error: 'Not authenticated',
@@ -26,7 +24,6 @@ export const editUser = async (formData: FormData, _id: unknown, key: string) =>
         [key]: value,
       },
     });
-    console.log('response', response);
     return response;
   } catch (error: any) {
     if (error.code === 'P2002') {
@@ -166,7 +163,7 @@ export async function addAgreement(agreementData: any) {
   }
 }
 
-export const getAgreements = async () => {
+export const getAgreements = async (): Promise<Agreement[]> => {
   try {
     const agreements = await prisma.agreement.findMany();
     return agreements.map((a) => ({
@@ -177,6 +174,7 @@ export const getAgreements = async () => {
       updatedAt: a.updatedAt,
       file: a.file,
       contentType: a.contentType,
+      ownerId: a.ownerId,
     }));
   } catch (error: any) {
     console.error('Error fetching agreements:', error);
