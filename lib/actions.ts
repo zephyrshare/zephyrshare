@@ -166,7 +166,7 @@ export async function addAgreement(agreementData: any) {
   }
 }
 
-export const getAgreements = async (): Promise<Agreement[]> => {
+export const getAgreements = async () => {
   try {
     const agreements = await prisma.agreement.findMany();
     return agreements.map((a) => ({
