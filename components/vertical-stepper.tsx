@@ -28,7 +28,7 @@ const useDataFiles = () => {
   /* Fetch data files logic here */
 };
 
-const steps = ['Choose data', 'Choose agreement', 'Choose customers'];
+const steps = ['Choose data', 'Choose agreement', 'Choose customer'];
 
 export default function VerticalStepper() {
   const [activeStep, setActiveStep] = useState(0);

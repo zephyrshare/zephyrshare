@@ -3,7 +3,16 @@
 // TODO - consider the problem of possibly exposing all UserRoles to all users by importing getBaseUrlPath from '@/lib/user-roles-privileges'?
 
 import Link from 'next/link';
-import { Globe, LayoutDashboard, Megaphone, Menu, Newspaper, Settings, HeartHandshake, FileArchive } from 'lucide-react';
+import {
+  Globe,
+  LayoutDashboard,
+  Megaphone,
+  Menu,
+  Newspaper,
+  Settings,
+  HeartHandshake,
+  FileArchive,
+} from 'lucide-react';
 import { useParams, usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
@@ -33,6 +42,12 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         icon: <LayoutDashboard width={18} />,
       },
       {
+        name: 'Contracts',
+        href: `${baseUrlPath}/contracts`,
+        isActive: segments.includes('contracts'),
+        icon: <HeartHandshake width={18} />,
+      },
+      {
         name: 'Customers',
         href: `${baseUrlPath}/customers`,
         isActive: segments.includes('customers'),
@@ -43,12 +58,6 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         href: `${baseUrlPath}/agreements`,
         isActive: segments.includes('agreements'),
         icon: <Newspaper width={18} />,
-      },
-      {
-        name: 'Contracts',
-        href: `${baseUrlPath}/contracts`,
-        isActive: segments.includes('contracts'),
-        icon: <HeartHandshake width={18} />,
       },
       {
         name: 'Data Files',
