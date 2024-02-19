@@ -21,7 +21,7 @@ export const columns: ColumnDef<Customer>[] = [
     cell: ({ row }) => {
       const customer = row.original;
       return (
-        <Link href={`owner/customers/${customer.id}`}>
+        <Link href={`customers/${customer.id}`}>
           <div>{customer.name}</div>
         </Link>
       );

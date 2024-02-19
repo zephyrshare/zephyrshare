@@ -175,6 +175,8 @@ export const getAgreements = async (): Promise<Agreement[]> => {
       file: a.file,
       contentType: a.contentType,
       ownerId: a.ownerId,
+      startDate: a.startDate,
+      endDate: a.endDate,
     }));
   } catch (error: any) {
     console.error('Error fetching agreements:', error);

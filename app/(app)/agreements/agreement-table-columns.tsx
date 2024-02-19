@@ -39,6 +39,14 @@ export const columns: ColumnDef<Agreement>[] = [
     accessorKey: 'contentType',
     header: 'File Type',
   },
+  // {
+  //   accessorKey: 'startDate',
+  //   header: 'Start Date',
+  // },
+  // {
+  //   accessorKey: 'endDate',
+  //   header: 'End Date',
+  // },
   {
     accessorKey: 'createdAt',
     header: 'Created At',

@@ -12,6 +12,7 @@
 - Create a new Prisma migration (after changing `schema.prisma`): `npx prisma migrate dev --name <migration-name>`
 - `npx prisma db push` 
 - `npx prisma migrate status`
+- Regenerate the Prisma Client: `npx prisma generate`
 
 
 ## Reset all Prisma Schema Migrations (Baseline the database)
@@ -55,7 +56,9 @@ The command will mark 0_init as applied by adding it to the _prisma_migrations t
 
 
 
-## Reset or remove Prisma Schema Migrations after a particular migration
+## Reset Prisma Schema Migrations after a particular migration
+This can also be used to fix database drift.
+
 
 
 
@@ -80,4 +83,10 @@ Delete all users from User table where role is null
 ```
 DELETE FROM "User"
 WHERE "role" IS NULL;
+```
+
+Manually updated a table column to not nullable
+```
+ALTER TABLE "Agreement"
+ALTER COLUMN "contentType" SET NOT NULL;
 ```

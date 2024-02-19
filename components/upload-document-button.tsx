@@ -3,6 +3,7 @@
 import { type PutBlobResult } from '@vercel/blob';
 import { upload } from '@vercel/blob/client';
 import { useState, useRef } from 'react';
+import { toast } from "sonner";
 import { zodResolver } from '@hookform/resolvers/zod';
 import LoadingDots from '@/components/icons/loading-dots';
 import { useForm } from 'react-hook-form';
@@ -22,6 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { minimumDelay } from '@/lib/utils';
 import { addAgreement } from '@/lib/actions';
+import UploadDropzone from '@/components/upload-dropzone';
 
 const formSchema = z.object({
   customerName: z.string().min(1, 'Customer Name is required.').max(50, 'Customer Name must not exceed 50 characters.'),
@@ -30,8 +32,8 @@ const formSchema = z.object({
 
 export default function UploadDocumentButton() {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const inputFileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
 
   // const form = useForm<z.infer<typeof formSchema>>({
@@ -57,21 +59,21 @@ export default function UploadDocumentButton() {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!inputFileRef.current?.files) {
-      throw new Error('No file selected');
+    // Check if the file is chosen
+    if (!currentFile) {
+      toast.error('Please select a file to upload.');
+      return; // prevent form from submitting
     }
 
-    const file = inputFileRef.current.files[0];
+    setUploading(true);
 
-    setLoading(true);
-
-    const newBlob = await upload(file.name, file, {
+    const newBlob = await upload(currentFile.name, currentFile, {
       access: 'public',
       handleUploadUrl: '/api/upload/agreement',
     });
 
     const newAgreement = await addAgreement({
-      name: file.name,
+      name: currentFile.name,
       file: newBlob.url,
       contentType: newBlob.contentType,
     });
@@ -79,12 +81,17 @@ export default function UploadDocumentButton() {
     console.log('newBlob', newBlob);
 
     setBlob(newBlob);
-    setLoading(false);
+    setUploading(false);
     setOpen(false);
   }
 
+  function handleOpenChange(isOpen: boolean) {
+    currentFile !== null && setCurrentFile(null)
+    setOpen(isOpen);
+  }
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="default" size="default" className="w-36">
           Upload Agreement
@@ -95,15 +102,21 @@ export default function UploadDocumentButton() {
           <DialogTitle>Upload an Agreement</DialogTitle>
           <DialogDescription>Upload a new agreement here. Click upload when you're done.</DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <input name="file" ref={inputFileRef} type="file" required />
-          <button type="submit">Upload</button>
-        </form>
-        {blob && (
-          <div>
-            Blob url: <a href={blob.url}>{blob.url}</a>
+        <form encType="multipart/form-data" onSubmit={handleSubmit} className="flex flex-col">
+          <div className="space-y-1">
+            <div className="pb-6">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <UploadDropzone currentFile={currentFile} setCurrentFile={setCurrentFile} />
+              </div>
+            </div>
           </div>
-        )}
+
+          <div className="flex justify-center">
+            <Button type="submit" className="w-full lg:w-1/2" disabled={uploading || !currentFile}>
+              {uploading ? 'Uploading...' : 'Upload Document'}
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
