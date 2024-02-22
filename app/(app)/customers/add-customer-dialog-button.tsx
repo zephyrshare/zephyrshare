@@ -18,15 +18,12 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { addCustomer } from '@/lib/actions';
+import { createOrganization } from '@/lib/actions';
 import { minimumDelay } from '@/lib/utils';
 
 const formSchema = z.object({
-  customerName: z
-    .string()
-    .min(1, 'Customer Name is required.')
-    .max(50, 'Customer Name must not exceed 50 characters.'),
-  customerDescription: z.string().max(400, 'Customer Description must not exceed 400 characters.').optional(),
+  name: z.string().min(1, 'Customer Name is required.').max(50, 'Customer Name must not exceed 50 characters.'),
+  description: z.string().max(400, 'Customer Description must not exceed 400 characters.').optional(),
 });
 
 export default function AddCustomerButton() {
@@ -43,12 +40,12 @@ export default function AddCustomerButton() {
 
     await minimumDelay(async () => {
       try {
-        await addCustomer(values);
+        await createOrganization(values);
         form.reset(); // This will reset the form fields to their initial state
       } catch (error) {
         console.error('Error submitting form', error);
       }
-    }), 200;
+    }, 200);
     setLoading(false);
     setOpen(false);
   }
@@ -70,7 +67,7 @@ export default function AddCustomerButton() {
             <div className="grid gap-4 py-4">
               <FormField
                 control={form.control}
-                name="customerName"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Customer Name</FormLabel>
@@ -83,7 +80,7 @@ export default function AddCustomerButton() {
               />
               <FormField
                 control={form.control}
-                name="customerDescription"
+                name="description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Customer Description</FormLabel>
@@ -97,9 +94,8 @@ export default function AddCustomerButton() {
             </div>
             <DialogFooter>
               <Button type="submit" disabled={loading}>
-                {' '}
                 {loading ? <LoadingDots /> : 'Add'}
-              </Button>{' '}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

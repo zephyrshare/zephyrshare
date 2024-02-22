@@ -2,18 +2,70 @@
 
 
 
-# Prisma
+# Prisma Guide for Zephyr Share
 - https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases-typescript-postgresql
+
 
 ## Common Prisma Commands
 - Setup a new Prisma project: `npx prisma init`
   - creates a new directory called prisma that contains a file called schema.prisma, which contains the Prisma schema with your database connection variable and schema models
   - creates the .env file in the root directory of the project, which is used for defining environment variables (such as your database connection)
 - Create a new Prisma migration (after changing `schema.prisma`): `npx prisma migrate dev --name <migration-name>`
-- Format the `schema.prisma` file: `npx prisma format`
-- `npx prisma db push` 
-- `npx prisma migrate status`
+- Only validate the local `schema.prisma` file: `npx prisma validate`
+- Format and validate the local `schema.prisma` file: `npx prisma format`
+- See whether the current local Prisma schema is in sync with the database schema: `npx prisma migrate diff --from- --to- ??`
 - Regenerate the Prisma Client: `npx prisma generate`
+- `npx prisma db push` 
+- `npx prisma db pull`
+- `npx prisma migrate status`
+
+
+## Prisma Relational DB Concepts
+
+### Many-to-Many Relationships
+https://www.prisma.io/docs/orm/prisma-schema/data-model/relations/many-to-many-relations
+
+"Many-to-many (m-n) relations refer to relations where zero or more records on one side of the relation can be connected to zero or more records on the other side."
+
+"In relational databases, m-n-relations are typically modelled via relation tables. m-n-relations can be either explicit or implicit in the Prisma schema. *We recommend using implicit m-n-relations if you do not need to store any additional meta-data in the relation table itself.* You can always migrate to an explicit m-n-relation later if needed."
+
+#### Implicit M-N-Relations (Recommended)
+
+
+#### Explicit M-N-Relations (May be used to store additional metadata in the relation table)
+In an explicit m-n relation, the relation table is represented as a model in the Prisma schema and can be used in queries. Explicit m-n relations define three models:
+- Two models with m-n relation, such as Category and Post.
+- One model that represents the relation table, such as CategoriesOnPosts (also sometimes called JOIN, link or pivot table) in the underlying database. The fields of a relation table model are both annotated relation fields (post and category) with a corresponding relation scalar field (postId and categoryId).
+
+The relation table CategoriesOnPosts connects related Post and Category records. In this example, the model representing the relation table also defines additional fields that describe the Post/Category relationship - who assigned the category (assignedBy), and when the category was assigned (assignedAt):
+
+```
+model Post {
+  id         Int                 @id @default(autoincrement())
+  title      String
+  categories CategoriesOnPosts[]
+}
+
+model Category {
+  id    Int                 @id @default(autoincrement())
+  name  String
+  posts CategoriesOnPosts[]
+}
+
+model CategoriesOnPosts {
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     Int // relation scalar field (used in the `@relation` attribute above)
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int // relation scalar field (used in the `@relation` attribute above)
+  assignedAt DateTime @default(now())
+  assignedBy String
+
+  @@id([postId, categoryId])
+}
+```
+
+
+### One-to-Many Relationships
 
 
 ## Reset all Prisma Schema Migrations (Baseline the database)
@@ -28,6 +80,11 @@ Steps:
 2. Truncate (delete all rows from) the `_prisma_migrations` table in the database
 ```sql
 TRUNCATE TABLE "_prisma_migrations";
+```
+or
+```sql
+DELETE FROM "_prisma_migrations"
+WHERE "id" = 'fd6c8bab-a613-44ae-b908-b65e3c41f228';
 ```
 
 3. Add a directory inside prisma/migrations with your preferred name for the migration. In this example, we will use 0_init as the migration name:
@@ -61,33 +118,3 @@ The command will mark 0_init as applied by adding it to the _prisma_migrations t
 This can also be used to fix database drift.
 
 
-
-
-
-## Queries
-
-```
-UPDATE "User"
-SET "role" = 'ZEPHYR_ADMIN'
-WHERE "id" = 'cls0x2q3p0000ligvucr2fzmc';
-```
-
-
-```
-UPDATE "User"
-SET "role" = 'OWNER_ADMIN'
-WHERE "id" = 'clsp3iya60000gymxtb36k0ud';
-```
-
-
-Delete all users from User table where role is null
-```
-DELETE FROM "User"
-WHERE "role" IS NULL;
-```
-
-Manually updated a table column to not nullable
-```
-ALTER TABLE "Agreement"
-ALTER COLUMN "contentType" SET NOT NULL;
-```

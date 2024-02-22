@@ -44,3 +44,14 @@ export function fileSizeFromBytes(bytes: number, decimals: number = 2): string {
   if (i === 0) return `${bytes} ${sizes[i]}`; // Bytes don't need decimal precision
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
+
+
+export function getEmailDomain(email: string | undefined | null): string {
+  if (!email) return '';
+  return email.split('@')[1];
+}
+
+export function getEmailUsername(email: string | undefined | null): string {
+  if (!email) return '';
+  return email.split('@')[0];
+}

@@ -11,7 +11,7 @@ datasource db {
 model User {
   id             String        @id @default(cuid())
   name           String?
-  username       String? // if you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
+  username       String?       // If you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
   gh_username    String?
   email          String?       @unique
   emailVerified  DateTime?
@@ -19,16 +19,17 @@ model User {
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
   role           String        @default("OWNER_ADMIN")
-  accounts       Account[] // User can have multiple Accounts (these are the OAuth accounts)
+  accounts       Account[]     // User can have multiple Accounts (these are the OAuth accounts)
   agreements     Agreement[]
   sessions       Session[]
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organizationId String?       // The ID of the organization the user belongs to. Must be nullable since the user signs up before joining an organization.
 }
 
 model Account {
   id                       String  @id @default(cuid())
   userId                   String
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   type                     String
   provider                 String
   providerAccountId        String
@@ -42,7 +43,6 @@ model Account {
   session_state            String?
   oauth_token_secret       String?
   oauth_token              String?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -52,8 +52,8 @@ model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
-  expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
 
   @@index([userId])
 }
@@ -70,9 +70,10 @@ model Organization {
   id                  String                 @id @default(cuid())
   name                String
   description         String?
+  emailDomain         String?                @unique    // The domain of the organization's email address
   logo                String?
   createdAt           DateTime               @default(now())
-  role                OrganizationRole       @default(BUYER)
+  role                OrganizationRole       @default(SELLER)
   users               User[]
   agreements          Agreement[]
   buyerRelationships  CustomerRelationship[] @relation("BuyerRelationships")
@@ -89,10 +90,10 @@ enum OrganizationRole {
 model CustomerRelationship {
   id                 String       @id @default(cuid())
   buyerOrgId         String // The ID of the buying organization
-  sellerOrgId        String // The ID of the selling organization
-  createdAt          DateTime     @default(now()) // When this relationship was established
   buyerOrganization  Organization @relation("BuyerRelationships", fields: [buyerOrgId], references: [id])
+  sellerOrgId        String // The ID of the selling organization
   sellerOrganization Organization @relation("SellerRelationships", fields: [sellerOrgId], references: [id])
+  createdAt          DateTime     @default(now()) // When this relationship was established
 
   @@unique([buyerOrgId, sellerOrgId])
 }
@@ -105,12 +106,12 @@ model Agreement {
   contentType    String // Content Type of uploaded agreement (e.g. application/pdf, plain/text, etc.)
   startDate      DateTime?
   endDate        DateTime?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  ownerId        String // This field holds the foreign key.
-  owner          User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  Organization   Organization? @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  uploader       User?        @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  uploaderId     String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
 
-  @@index([ownerId])
+  @@index([organizationId])
 }

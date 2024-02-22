@@ -35,15 +35,8 @@ export default function Form({
   return (
     <form
       action={async (data: FormData) => {
-        if (
-          inputAttrs.name === 'customDomain' &&
-          inputAttrs.defaultValue &&
-          data.get('customDomain') !== inputAttrs.defaultValue &&
-          !confirm('Are you sure you want to change your custom domain?')
-        ) {
-          return;
-        }
-        handleSubmit(data, id, inputAttrs.name).then(async (res: any) => {
+        const obj = Object.fromEntries(data.entries())
+        handleSubmit(obj).then(async (res: any) => {
           if (res.error) {
             toast.error(res.error);
           } else {

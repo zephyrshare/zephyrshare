@@ -22,7 +22,7 @@ import WindIcon from '@/components/icons/wind-icon';
 const externalLinks = [
   {
     name: 'Read announcement',
-    href: `${process.env.NEXTAUTH_URL}`,
+    href: `${process.env.NEXT_PUBLIC_URL}`,
     icon: <Megaphone width={18} />,
   },
 ];

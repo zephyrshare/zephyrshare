@@ -27,14 +27,14 @@ export const columns: ColumnDef<Agreement>[] = [
       );
     },
   },
-  {
-    accessorKey: 'description',
-    header: 'Description',
-  },
-  {
-    accessorKey: 'file',
-    header: 'File',
-  },
+  // {
+  //   accessorKey: 'description',
+  //   header: 'Description',
+  // },
+  // {
+  //   accessorKey: 'file',
+  //   header: 'File',
+  // },
   {
     accessorKey: 'contentType',
     header: 'File Type',

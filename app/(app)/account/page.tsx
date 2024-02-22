@@ -1,7 +1,7 @@
 import Form from "@/components/form";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { editUser } from "@/lib/actions";
+import { updateUser } from "@/lib/actions";
 
 export default async function AccountPage() {
   const session = await getSession();
@@ -26,7 +26,7 @@ export default async function AccountPage() {
             placeholder: "Brendon Urie",
             maxLength: 32,
           }}
-          handleSubmit={editUser}
+          handleSubmit={updateUser}
         />
         <Form
           title="Email"
@@ -38,7 +38,7 @@ export default async function AccountPage() {
             defaultValue: session.user.email!,
             placeholder: "panic@thedis.co",
           }}
-          handleSubmit={editUser}
+          handleSubmit={updateUser}
         />
       </div>
     </div>

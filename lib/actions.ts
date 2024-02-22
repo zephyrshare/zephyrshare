@@ -4,69 +4,56 @@ import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { Organization, Agreement } from '@prisma/client';
+import { Organization, OrganizationRole, Agreement } from '@prisma/client';
+import { unstable_noStore as noStore } from 'next/cache';
 
-export const editUser = async (formData: FormData, _id: unknown, key: string) => {
+export const updateUser = async (userData: any) => {
   const session = await getSession();
+  console.log('Session in updateUser:', session);
   if (!session?.user.id) {
     return {
       error: 'Not authenticated',
     };
   }
-  const value = formData.get(key) as string;
+
+  console.log('Updating user:', userData);
 
   try {
     const response = await prisma.user.update({
-      where: {
-        id: session?.user.id,
-      },
-      data: {
-        [key]: value,
-      },
+      where: { id: session?.user.id },
+      data: { ...userData },
     });
+    console.log('Updated user:', response);
     return response;
   } catch (error: any) {
-    if (error.code === 'P2002') {
-      return {
-        error: `This ${key} is already in use`,
-      };
-    } else {
-      return {
-        error: error.message,
-      };
-    }
+    return { error: error.message };
   }
 };
 
-// Assuming you're using TypeScript, if not, you can ignore the type annotations
-export const addOrganization = async ({
-  organizationName,
-  organizationDescription,
-}: // Assuming 'logo' might also be a part of your form, or you can omit this if not.
-{
-  organizationName: string;
-  organizationDescription?: string;
-  // logo?: string; // Include this if your form actually includes a logo upload; otherwise, omit it
-}) => {
+export const updateUserOnLogin = async (userData: any, id: string) => {
   try {
-    const organization = await prisma.organization.create({
-      data: {
-        name: organizationName,
-        description: organizationDescription,
-        // Assuming 'logo' handling remains as is, or adjust according to your actual form data structure
-        // logo: logo || null, // Adjust this logic based on how you're handling logos
-      },
+    const response = await prisma.user.update({
+      where: { id },
+      data: { ...userData },
     });
+    console.log('Updated user on login:', response);
+    return response;
+  } catch (error: any) {
+    return { error: error.message };
+  }
+};
+
+export const createOrganization = async (organizationData: any) => {
+  try {
+    const organization = await prisma.organization.create({ data: { ...organizationData } });
     return organization;
   } catch (error: any) {
     console.error('Error adding organization:', error);
-    return {
-      error: error.message,
-    };
+    return { error: error.message };
   } finally {
     // Revalidate the cache for the invoices page and redirect the user.
-    revalidatePath('/organizations');
-    redirect('/organizations');
+    revalidatePath('/customers');
+    redirect('/customers');
   }
 };
 
@@ -85,8 +72,10 @@ export const getOrganizationById = async (id: string): Promise<Organization | nu
       id: organization.id,
       name: organization.name,
       description: organization.description,
+      emailDomain: organization.emailDomain,
       logo: organization.logo, // Assuming 'logo' is a field in your Organization model
       createdAt: organization.createdAt, // Assuming 'createdAt' is a field in your Organization model
+      role: organization.role as OrganizationRole,
     };
   } catch (error: any) {
     console.error('Error fetching organization by ID:', error);
@@ -94,15 +83,47 @@ export const getOrganizationById = async (id: string): Promise<Organization | nu
   }
 };
 
+export const getOrganizationByEmailDomain = async (emailDomain: string): Promise<Organization | null> => {
+  try {
+    const organization = await prisma.organization.findUnique({
+      where: {
+        emailDomain,
+      },
+    });
+    if (!organization) {
+      console.error('Organization not found');
+      return null;
+    }
+    return {
+      id: organization.id,
+      name: organization.name,
+      description: organization.description,
+      emailDomain: organization.emailDomain,
+      logo: organization.logo, // Assuming 'logo' is a field in your Organization model
+      createdAt: organization.createdAt, // Assuming 'createdAt' is a field in your Organization model
+      role: organization.role as OrganizationRole,
+    };
+  } catch (error: any) {
+    console.error('Error fetching organization by email domain:', error);
+    throw new Error(error.message);
+  }
+};
+
 export const getOrganizations = async (): Promise<Organization[]> => {
   try {
     const organizations = await prisma.organization.findMany();
-    return organizations.map((c) => ({
+
+    // remove organization with name "Your Organization"
+    const filteredOrganizations = organizations.filter((org) => org.name !== 'Your Organization');
+
+    return filteredOrganizations.map((c) => ({
       id: c.id,
       name: c.name,
       description: c.description,
+      emailDomain: c.emailDomain,
       logo: c.logo,
       createdAt: c.createdAt, // Assuming 'createdAt' exists in your Prisma model
+      role: c.role as OrganizationRole,
     }));
   } catch (error: any) {
     console.error('Error fetching organizations:', error);
@@ -146,7 +167,8 @@ export async function addAgreement(agreementData: any) {
     const newAgreement = await prisma.agreement.create({
       data: {
         ...agreementData,
-        ownerId: session?.user.id,
+        uploaderId: session?.user.id,
+        organizationId: session?.user.organizationId,
       },
     });
     console.log('Added agreement:', newAgreement);
@@ -163,6 +185,9 @@ export async function addAgreement(agreementData: any) {
   }
 }
 
+/**
+ * Get all agreements
+ */
 export const getAgreements = async (): Promise<Agreement[]> => {
   try {
     const agreements = await prisma.agreement.findMany();
@@ -174,12 +199,53 @@ export const getAgreements = async (): Promise<Agreement[]> => {
       updatedAt: a.updatedAt,
       file: a.file,
       contentType: a.contentType,
-      ownerId: a.ownerId,
+      uploaderId: a.uploaderId,
       startDate: a.startDate,
       endDate: a.endDate,
+      organizationId: a.organizationId,
     }));
   } catch (error: any) {
     console.error('Error fetching agreements:', error);
+    throw new Error(error.message);
+  }
+};
+
+/**
+ * Get all agreements that belong to an organization
+ * Use the organizationId from the session.user object
+ */
+export const getAgreementsByOrganization = async (): Promise<Agreement[]> => {
+  const session = await getSession();
+  console.log('Session in getAgreementsByOrganization:', session);
+  if (!session?.user.organizationId) {
+    return [];
+  }
+
+  noStore(); // Prevent caching of this page
+
+  console.log('Fetching agreements for organization:', session.user.organizationId);
+
+  try {
+    const agreements = await prisma.agreement.findMany({
+      where: {
+        organizationId: session.user.organizationId,
+      },
+    });
+    return agreements.map((a) => ({
+      id: a.id,
+      name: a.name,
+      description: a.description,
+      createdAt: a.createdAt,
+      updatedAt: a.updatedAt,
+      file: a.file,
+      contentType: a.contentType,
+      uploaderId: a.uploaderId,
+      startDate: a.startDate,
+      endDate: a.endDate,
+      organizationId: a.organizationId,
+    }));
+  } catch (error: any) {
+    console.error('Error fetching organization agreements:', error);
     throw new Error(error.message);
   }
 };

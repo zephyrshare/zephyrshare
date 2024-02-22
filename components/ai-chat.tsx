@@ -2,8 +2,8 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { useChat } from 'ai/react';
-import { ArrowUp, User2, Plus } from 'lucide-react'; // <User2 className="text-black-400" size={24} />
+import { useChat, UseChatOptions } from 'ai/react';
+import { ArrowUp, Plus } from 'lucide-react'; // <User2 className="text-black-400" size={24} />
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, TooltipArrow } from '@/components/ui/tooltip';
@@ -19,11 +19,24 @@ const promptIdeas = [
   'How many contracts in progress but not approved?',
   'How many contracts are expiring in the next 30 days?',
   'Please create a new contract for a customer.',
+  'Can you give a sentence summary of my most recent agreement?',
 ];
+
+const promptContext = `
+Here are the most recent updates for Zephyr Share. Please answer the prompted questions based on the following data. Don't make up data, just use the data available here. Your tone should be confident, speak as if you are the Zephyr Share AI.:
+- Today's update is there are no new cusomters.
+- We have 3 contracts in progress and 2 contracts expiring in the next 30 days.
+- The most recent agreement is a 3-year contract with a new customer.
+- The customer has not accessed data in the last 30 days.
+`;
+
+const chatOptions: UseChatOptions = {
+  // initialInput: promptContext    // this is prepending the promptContext to the input field.
+};
 
 export default function AIChat() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { messages, input, handleInputChange, setInput, handleSubmit } = useChat();
+  const { messages, input, handleInputChange, setInput, handleSubmit } = useChat(chatOptions);
   const [visiblePrompts, setVisiblePrompts] = useState(promptIdeas.slice(0, 4)); // Initialize with the first 4 prompts
   const { data: session } = useSession();
 
@@ -46,7 +59,7 @@ export default function AIChat() {
   }
 
   function handleButtonClick(text: string) {
-    setInput(text);
+    setInput(`${text}\n\n\n${promptContext}`);
 
     // focus on the textarea
     textareaRef.current?.focus();
@@ -92,7 +105,7 @@ export default function AIChat() {
             rows={1}
           />
         </div>
-        <div className="pb-4 flex flex-wrap w-full relative">
+        <div className="pb-4 flex flex-wrap w-full relative max-h-48 overflow-y-scroll">
           {visiblePrompts.map((prompt: string, i: number) => (
             <Button
               key={i}
@@ -136,7 +149,7 @@ export default function AIChat() {
           </div>
           <div className="flex flex-col">
             <h4 className="text-sm font-bold">{m.role === 'user' ? 'You' : 'Zephyr Share'}</h4>
-            <div className="whitespace-pre-wrap text-sm">{m.content}</div>
+            <div className="whitespace-pre-wrap text-sm">{m.content.split('\n\n\n')[0]}</div>
           </div>
         </div>
       ))}
