@@ -91,6 +91,8 @@ export const authOptions: NextAuthOptions = {
         role: token?.user?.role, // Include the user's role in the session
         // @ts-expect-error
         organizationId: token?.user?.organizationId,
+        // @ts-expect-error
+        apiToken: token?.user?.apiToken,
       };
       return session;
     },

@@ -11,6 +11,11 @@ Prisma Studio is a visual editor for your database. It allows you to view and ed
 ```
 npx prisma studio
 ```
+NOTE, if you've changed your `schema.prisma` file, you may need to regenerate the Prisma Client and push the schema changes before running Prisma Studio:
+```
+npx prisma generate
+npx prisma db push
+```
 
 
 ## Common Prisma Commands

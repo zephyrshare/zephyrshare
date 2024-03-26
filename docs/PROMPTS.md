@@ -30,8 +30,9 @@ As we embark on developing this web application, it's crucial to adhere to our s
 
 ### Next.js Component Types
 
-- **Server Components** are rendered on the server using the `server` directive and cannot utilize React hooks. As a note, it's assumed that Next.js components are server components unless otherwise specified.
-- **Client Components** are rendered on the client using the `client` directive and can use React hooks.
+- **Server Components** are rendered on the server using the `server` directive and cannot utilize React hooks - this means that `useState` and `useEffect` CANNOT be used in a server component. If `useState` and `useEffect` would like to be used, they can be written in a Client Component that is then imported into the server component. As a note, it's assumed that Next.js components are server components unless otherwise specified. Note, server components must have the "use server" directive at the top of the file.
+
+- **Client Components** are rendered on the client using the `client` directive and can use React hooks - this means that `useState` and `useEffect` CAN be used in a client component. If `useState` and `useEffect` are not used, the component can usually be written as a Server Component. Note, client components must have the "use client" directive at the top of the file.
 
 ### Linking
 
