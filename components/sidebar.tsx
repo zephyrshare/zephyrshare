@@ -6,26 +6,17 @@ import Link from 'next/link';
 import {
   Globe,
   LayoutDashboard,
-  Megaphone,
   Menu,
   Newspaper,
   Settings,
   HeartHandshake,
   FileArchive,
 } from 'lucide-react';
-import { useParams, usePathname, useSelectedLayoutSegments } from 'next/navigation';
+import { usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { getBaseUrlPath } from '@/lib/user-roles-privileges';
 import WindIcon from '@/components/icons/wind-icon';
-
-const externalLinks = [
-  {
-    name: 'Read announcement',
-    href: `${process.env.NEXT_PUBLIC_URL}`,
-    icon: <Megaphone width={18} />,
-  },
-];
 
 export default function Sidebar({ children }: { children: ReactNode }) {
   const segments = useSelectedLayoutSegments();
@@ -97,12 +88,12 @@ export default function Sidebar({ children }: { children: ReactNode }) {
       <div
         className={`transform ${
           showSidebar ? 'w-full translate-x-0' : '-translate-x-full'
-        } fixed z-10 flex h-full flex-col justify-between border-r border-stone-200 bg-stone-100 p-4 transition-all dark:border-stone-700 dark:bg-stone-900 sm:w-60 sm:translate-x-0`}
+        } fixed z-10 flex h-full flex-col justify-between border-r border-stone-200 bg-neutral-50 p-4 transition-all dark:border-stone-700 dark:bg-stone-900 sm:w-60 sm:translate-x-0`}
       >
         <div className="grid gap-2">
           <div className="flex items-center space-x-2 rounded-lg px-2 py-1.5">
             <div className="flex items-center">
-              <p className="text-xl font-bold">Zephyr Share</p>
+              <p className="text-lg font-medium">ZephyrShare</p>
               <WindIcon className="ml-1" size={16} />
             </div>
           </div>
@@ -112,34 +103,19 @@ export default function Sidebar({ children }: { children: ReactNode }) {
                 key={name}
                 href={href}
                 className={`flex items-center space-x-3 ${
-                  isActive ? 'bg-stone-200 text-black dark:bg-stone-700' : ''
-                } rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}
+                  isActive
+                    ? 'bg-slate-200 text-black dark:bg-stone-700 decoration-dotted underline underline-offset-4'
+                    : ''
+                } rounded-lg px-2 py-1.5 hover:bg-slate-200 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800`}
               >
                 {icon}
-                <span className="text-sm font-medium">{name}</span>
+                <span className="text-sm font-normal">{name}</span>
               </Link>
             ))}
           </div>
         </div>
         <div>
-          <div className="grid gap-1">
-            {externalLinks.map(({ name, href, icon }) => (
-              <a
-                key={name}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between rounded-lg px-2 py-1.5 transition-all duration-150 ease-in-out hover:bg-stone-200 active:bg-stone-300 dark:text-white dark:hover:bg-stone-700 dark:active:bg-stone-800"
-              >
-                <div className="flex items-center space-x-3">
-                  {icon}
-                  <span className="text-sm font-medium">{name}</span>
-                </div>
-                <p>↗</p>
-              </a>
-            ))}
-          </div>
-          <div className="my-2 border-t border-stone-200 dark:border-stone-700">{children}</div>
+          <div className="my-2 py-2 border-t border-stone-200 dark:border-stone-700">{children}</div>
         </div>
       </div>
     </>

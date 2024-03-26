@@ -5,6 +5,13 @@
 # Prisma Guide for Zephyr Share
 - https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases-typescript-postgresql
 
+## Prisma Studio
+Prisma Studio is a visual editor for your database. It allows you to view and edit the data in your database, and it also provides a way to view the Prisma schema and the Prisma Client API. (https://www.prisma.io/docs/orm/tools/prisma-studio)
+
+```
+npx prisma studio
+```
+
 
 ## Common Prisma Commands
 - Setup a new Prisma project: `npx prisma init`

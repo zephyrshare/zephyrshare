@@ -28,7 +28,7 @@ const useDataFiles = () => {
   /* Fetch data files logic here */
 };
 
-const steps = ['Choose data', 'Choose agreement', 'Choose customer'];
+const steps = ['Choose data...', 'Choose agreement...', 'Choose customer...'];
 
 export default function VerticalStepper() {
   const [activeStep, setActiveStep] = useState(0);
@@ -59,51 +59,23 @@ export default function VerticalStepper() {
       case 0:
         return (
           <Select>
-            <SelectTrigger className="w-[280px]">
-              <SelectValue placeholder="Select a timezone" />
+            <SelectTrigger className="w-[500px]">
+              <SelectValue placeholder="Select data files" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>North America</SelectLabel>
-                <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-                <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-                <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
-                <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
-                <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
-                <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
+                <SelectLabel>Analytics Reports</SelectLabel>
+                <SelectItem value="sales_report">Sales Report</SelectItem>
+                <SelectItem value="customer_engagement">Customer Engagement</SelectItem>
+                <SelectItem value="inventory_levels">Inventory Levels</SelectItem>
+                <SelectItem value="financial_overview">Financial Overview</SelectItem>
               </SelectGroup>
               <SelectGroup>
-                <SelectLabel>Europe & Africa</SelectLabel>
-                <SelectItem value="gmt">Greenwich Mean Time (GMT)</SelectItem>
-                <SelectItem value="cet">Central European Time (CET)</SelectItem>
-                <SelectItem value="eet">Eastern European Time (EET)</SelectItem>
-                <SelectItem value="west">Western European Summer Time (WEST)</SelectItem>
-                <SelectItem value="cat">Central Africa Time (CAT)</SelectItem>
-                <SelectItem value="eat">East Africa Time (EAT)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>Asia</SelectLabel>
-                <SelectItem value="msk">Moscow Time (MSK)</SelectItem>
-                <SelectItem value="ist">India Standard Time (IST)</SelectItem>
-                <SelectItem value="cst_china">China Standard Time (CST)</SelectItem>
-                <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
-                <SelectItem value="kst">Korea Standard Time (KST)</SelectItem>
-                <SelectItem value="ist_indonesia">Indonesia Central Standard Time (WITA)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>Australia & Pacific</SelectLabel>
-                <SelectItem value="awst">Australian Western Standard Time (AWST)</SelectItem>
-                <SelectItem value="acst">Australian Central Standard Time (ACST)</SelectItem>
-                <SelectItem value="aest">Australian Eastern Standard Time (AEST)</SelectItem>
-                <SelectItem value="nzst">New Zealand Standard Time (NZST)</SelectItem>
-                <SelectItem value="fjt">Fiji Time (FJT)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>South America</SelectLabel>
-                <SelectItem value="art">Argentina Time (ART)</SelectItem>
-                <SelectItem value="bot">Bolivia Time (BOT)</SelectItem>
-                <SelectItem value="brt">Brasilia Time (BRT)</SelectItem>
-                <SelectItem value="clt">Chile Standard Time (CLT)</SelectItem>
+                <SelectLabel>Market Research</SelectLabel>
+                <SelectItem value="industry_trends">Industry Trends</SelectItem>
+                <SelectItem value="competitor_analysis">Competitor Analysis</SelectItem>
+                <SelectItem value="consumer_behavior">Consumer Behavior</SelectItem>
+                <SelectItem value="product_feedback">Product Feedback</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -111,51 +83,23 @@ export default function VerticalStepper() {
       case 1:
         return (
           <Select>
-            <SelectTrigger className="w-[280px]">
-              <SelectValue placeholder="Select a timezone" />
+            <SelectTrigger className="w-[500px]">
+              <SelectValue placeholder="Select an agreement" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>North America</SelectLabel>
-                <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-                <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-                <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
-                <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
-                <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
-                <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
+                <SelectLabel>Service Agreements</SelectLabel>
+                <SelectItem value="nda">Non-Disclosure Agreement (NDA)</SelectItem>
+                <SelectItem value="sla">Service Level Agreement (SLA)</SelectItem>
+                <SelectItem value="purchase_order">Purchase Order Agreement</SelectItem>
+                <SelectItem value="software_license">Software License Agreement</SelectItem>
               </SelectGroup>
               <SelectGroup>
-                <SelectLabel>Europe & Africa</SelectLabel>
-                <SelectItem value="gmt">Greenwich Mean Time (GMT)</SelectItem>
-                <SelectItem value="cet">Central European Time (CET)</SelectItem>
-                <SelectItem value="eet">Eastern European Time (EET)</SelectItem>
-                <SelectItem value="west">Western European Summer Time (WEST)</SelectItem>
-                <SelectItem value="cat">Central Africa Time (CAT)</SelectItem>
-                <SelectItem value="eat">East Africa Time (EAT)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>Asia</SelectLabel>
-                <SelectItem value="msk">Moscow Time (MSK)</SelectItem>
-                <SelectItem value="ist">India Standard Time (IST)</SelectItem>
-                <SelectItem value="cst_china">China Standard Time (CST)</SelectItem>
-                <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
-                <SelectItem value="kst">Korea Standard Time (KST)</SelectItem>
-                <SelectItem value="ist_indonesia">Indonesia Central Standard Time (WITA)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>Australia & Pacific</SelectLabel>
-                <SelectItem value="awst">Australian Western Standard Time (AWST)</SelectItem>
-                <SelectItem value="acst">Australian Central Standard Time (ACST)</SelectItem>
-                <SelectItem value="aest">Australian Eastern Standard Time (AEST)</SelectItem>
-                <SelectItem value="nzst">New Zealand Standard Time (NZST)</SelectItem>
-                <SelectItem value="fjt">Fiji Time (FJT)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>South America</SelectLabel>
-                <SelectItem value="art">Argentina Time (ART)</SelectItem>
-                <SelectItem value="bot">Bolivia Time (BOT)</SelectItem>
-                <SelectItem value="brt">Brasilia Time (BRT)</SelectItem>
-                <SelectItem value="clt">Chile Standard Time (CLT)</SelectItem>
+                <SelectLabel>Contract Types</SelectLabel>
+                <SelectItem value="consulting_contract">Consulting Contract</SelectItem>
+                <SelectItem value="sales_contract">Sales Contract</SelectItem>
+                <SelectItem value="distribution_agreement">Distribution Agreement</SelectItem>
+                <SelectItem value="employment_contract">Employment Contract</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -163,51 +107,16 @@ export default function VerticalStepper() {
       case 2:
         return (
           <Select>
-            <SelectTrigger className="w-[280px]">
-              <SelectValue placeholder="Select a timezone" />
+            <SelectTrigger className="w-[500px]">
+              <SelectValue placeholder="Select customer for the contract" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>North America</SelectLabel>
-                <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-                <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-                <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
-                <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
-                <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
-                <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>Europe & Africa</SelectLabel>
-                <SelectItem value="gmt">Greenwich Mean Time (GMT)</SelectItem>
-                <SelectItem value="cet">Central European Time (CET)</SelectItem>
-                <SelectItem value="eet">Eastern European Time (EET)</SelectItem>
-                <SelectItem value="west">Western European Summer Time (WEST)</SelectItem>
-                <SelectItem value="cat">Central Africa Time (CAT)</SelectItem>
-                <SelectItem value="eat">East Africa Time (EAT)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>Asia</SelectLabel>
-                <SelectItem value="msk">Moscow Time (MSK)</SelectItem>
-                <SelectItem value="ist">India Standard Time (IST)</SelectItem>
-                <SelectItem value="cst_china">China Standard Time (CST)</SelectItem>
-                <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
-                <SelectItem value="kst">Korea Standard Time (KST)</SelectItem>
-                <SelectItem value="ist_indonesia">Indonesia Central Standard Time (WITA)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>Australia & Pacific</SelectLabel>
-                <SelectItem value="awst">Australian Western Standard Time (AWST)</SelectItem>
-                <SelectItem value="acst">Australian Central Standard Time (ACST)</SelectItem>
-                <SelectItem value="aest">Australian Eastern Standard Time (AEST)</SelectItem>
-                <SelectItem value="nzst">New Zealand Standard Time (NZST)</SelectItem>
-                <SelectItem value="fjt">Fiji Time (FJT)</SelectItem>
-              </SelectGroup>
-              <SelectGroup>
-                <SelectLabel>South America</SelectLabel>
-                <SelectItem value="art">Argentina Time (ART)</SelectItem>
-                <SelectItem value="bot">Bolivia Time (BOT)</SelectItem>
-                <SelectItem value="brt">Brasilia Time (BRT)</SelectItem>
-                <SelectItem value="clt">Chile Standard Time (CLT)</SelectItem>
+                <SelectLabel>Business Type</SelectLabel>
+                <SelectItem value="retail">Retail</SelectItem>
+                <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                <SelectItem value="it_services">IT Services</SelectItem>
+                <SelectItem value="healthcare">Healthcare</SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -218,12 +127,12 @@ export default function VerticalStepper() {
   };
 
   return (
-    <Box sx={{ maxWidth: 400 }}>
+    <Box sx={{ maxWidth: 900 }}>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((label, index) => (
           <Step key={label} sx={{ mb: 3, color: 'grey' }}>
             <StepLabel>{label}</StepLabel>
-            <div className="ml-8">{getStepContent(index)}</div>
+            <div className="ml-10">{getStepContent(index)}</div>
           </Step>
         ))}
       </Stepper>

@@ -10,7 +10,7 @@ export default async function CustomerPage({ params }: { params: { id: string } 
 
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold">{customer.name}</h1>
+      <h1 className="text-xl font-medium">{customer.name}</h1>
       <p className="mt-8">{customer.description}</p>
     </div>
   );

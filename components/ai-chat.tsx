@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 const promptIdeas = [
   'Can you give me a quick update for today?',
   'How many active contracts do we have?',
+  'Which customers have active contracts?',
   'When is the next contract renewal?',
   'Which customers have never accessed data they are licensed to?',
   'Which customers have not accessed data in the last 30 days?',
@@ -28,6 +29,10 @@ Here are the most recent updates for Zephyr Share. Please answer the prompted qu
 - We have 3 contracts in progress and 2 contracts expiring in the next 30 days.
 - The most recent agreement is a 3-year contract with a new customer.
 - The customer has not accessed data in the last 30 days.
+- Our currently active customers are Yes Energy, Argus, and EIA.
+- The next contract renewal is coming up with Argus in April 2024.
+
+Always ask the user if they have follow up questions about what they asked.
 `;
 
 const chatOptions: UseChatOptions = {
@@ -90,7 +95,7 @@ export default function AIChat() {
           </TooltipProvider>
           <Textarea
             ref={textareaRef}
-            className="py-4 px-4 mb-2 min-h-0 border border-gray-300 rounded-lg shadow-sm text-md font-light tracking-normal resize-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-opacity-0"
+            className="py-4 px-4 mb-2 min-h-0 border border-gray-300 rounded-lg shadow-sm text-sm font-light tracking-normal resize-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-opacity-0"
             value={input}
             placeholder="Ask Zephyr Share..."
             onChange={handleInputChange}

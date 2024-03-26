@@ -78,7 +78,7 @@ export function getBaseUrlPath(userRole: string) {
     case UserRole.ZEPHYR_ADMIN:
     case UserRole.ZEPHYR_OPERATOR:
     case UserRole.ZEPHYR_VIEWER:
-      return '/admin';
+      // return '/admin';
     case UserRole.OWNER_ADMIN:
     case UserRole.OWNER_OPERATOR:
     case UserRole.OWNER_VIEWER:
