@@ -3,5 +3,6 @@
   "rules": {
     "react/no-unescaped-entities": "off",
     "react/prop-types": "off"
-  }
+  },
+  "ignorePatterns": ["zephyrshare-api/"]
 }
