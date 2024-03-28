@@ -14,7 +14,7 @@ import {
 import { deleteOrganization } from '@/lib/actions';
 import { Organization } from '@prisma/client';
 
-export const columns: ColumnDef<Organization>[] = [
+export const customersTableColumns: ColumnDef<Organization>[] = [
   {
     accessorKey: 'name',
     header: 'Name',

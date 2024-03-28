@@ -14,7 +14,7 @@ import {
 import { deleteAgreement } from '@/lib/actions';
 import { Agreement } from '@prisma/client';
 
-export const columns: ColumnDef<Agreement>[] = [
+export const agreementTableColumns: ColumnDef<Agreement>[] = [
   {
     accessorKey: 'name',
     header: 'Name',

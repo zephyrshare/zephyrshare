@@ -11,6 +11,7 @@ import {
   Settings,
   HeartHandshake,
   FileArchive,
+  ArrowRightFromLine
 } from 'lucide-react';
 import { usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
@@ -37,6 +38,12 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         href: `${baseUrlPath}/contracts`,
         isActive: segments.includes('contracts'),
         icon: <HeartHandshake width={18} />,
+      },
+      {
+        name: 'Actions',
+        href: `${baseUrlPath}/actions`,
+        isActive: segments.includes('actions'),
+        icon: <ArrowRightFromLine width={18} />,
       },
       {
         name: 'Customers',
