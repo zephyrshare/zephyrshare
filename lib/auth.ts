@@ -6,7 +6,7 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { User } from '@prisma/client';
 import { getEmailDomain, getEmailUsername } from '@/lib/utils';
-import { createOrganization, updateUserOnLogin, getOrganizationByEmailDomain } from '@/lib/actions/actions';
+import { createOrganization, updateUserOnLogin, getOrganizationByEmailDomain } from '@/lib/actions';
 import { DEFAULT_ORG_NAME } from '@/lib/constants';
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;

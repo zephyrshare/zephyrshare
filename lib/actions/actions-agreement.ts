@@ -7,12 +7,6 @@ import { redirect } from 'next/navigation';
 import { Agreement } from '@prisma/client';
 import { unstable_noStore as noStore } from 'next/cache';
 
-export * from './actions-agreement';
-export * from './actions-aws';
-export * from './actions-organization';
-export * from './actions-user';
-
-
 export async function addAgreement(agreementData: any) {
   const session = await getSession();
   try {
@@ -40,7 +34,7 @@ export async function addAgreement(agreementData: any) {
 /**
  * Get all agreements
  */
-export const getAgreements = async (): Promise<Agreement[]> => {
+export async function getAgreements(): Promise<Agreement[]> {
   try {
     const agreements = await prisma.agreement.findMany();
     return agreements.map((a) => ({
@@ -66,7 +60,7 @@ export const getAgreements = async (): Promise<Agreement[]> => {
  * Get all agreements that belong to an organization
  * Use the organizationId from the session.user object
  */
-export const getAgreementsByOrganization = async (): Promise<Agreement[]> => {
+export async function getAgreementsByOrganization(): Promise<Agreement[]> {
   const session = await getSession();
   console.log('Session in getAgreementsByOrganization:', session);
   if (!session?.user.organizationId) {
@@ -102,7 +96,7 @@ export const getAgreementsByOrganization = async (): Promise<Agreement[]> => {
   }
 };
 
-export const deleteAgreement = async (agreementId: string) => {
+export async function deleteAgreement(agreementId: string) {
   const session = await getSession();
 
   // Check if the user is authenticated

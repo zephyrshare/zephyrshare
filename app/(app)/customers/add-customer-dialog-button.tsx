@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { createOrganization } from '@/lib/actions/actions';
+import { createOrganization } from '@/lib/actions';
 import { minimumDelay } from '@/lib/utils';
 
 const formSchema = z.object({

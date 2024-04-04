@@ -13,8 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { addDataFile } from '@/lib/actions/actions';
-import { getS3PresignedUploadUrl } from '@/lib/actions/actions';
+import { addDataFile } from '@/lib/actions';
+import { getS3PresignedUploadUrl } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
 
 export default function UploadDataFileButton({ user }: { user: User }) {

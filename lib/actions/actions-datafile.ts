@@ -28,7 +28,7 @@ export async function getDataFilesByOrganization(): Promise<DataFile[]> {
   }
 }
 
-export const deleteDataFile = async (dataFileId: string) => {
+export async function deleteDataFile(dataFileId: string) {
   const session = await getSession();
 
   // Check if the user is authenticated
@@ -59,7 +59,7 @@ export const deleteDataFile = async (dataFileId: string) => {
 }
 
 export async function addDataFile(file: any): Promise<any> {
-  console.log('Adding data file:', file)
+  console.log('Adding data file:', file);
   try {
     const session = await getSession();
     const newFile = await prisma.dataFile.create({
@@ -77,5 +77,3 @@ export async function addDataFile(file: any): Promise<any> {
     throw new Error('Failed to add data file.');
   }
 }
-
-

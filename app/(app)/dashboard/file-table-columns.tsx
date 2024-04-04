@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { DataFile } from '@prisma/client';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { deleteDataFile } from '@/lib/actions/actions';
+import { deleteDataFile } from '@/lib/actions';
 
 export const dataFileTableColumns: ColumnDef<DataFile>[] = [
   {

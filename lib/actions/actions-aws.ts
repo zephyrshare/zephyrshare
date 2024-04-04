@@ -9,18 +9,18 @@ const s3 = new S3({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
-export async function getS3PresignedUploadUrl(s3Key: string) {
+export const getS3PresignedUploadUrl = async (s3Key: string) => {
   const params = {
     Bucket: process.env.AWS_FILES_BUCKET_NAME,
     Key: s3Key,
     Expires: 60 * 5, // 5 minutes
   };
 
-  console.log('params in actions-aws', params)
+  console.log('params in actions-aws', params);
 
   const signedUrl = await s3.getSignedUrlPromise('putObject', params);
 
-  console.log('signedUrl in actions-aws', signedUrl)
+  console.log('signedUrl in actions-aws', signedUrl);
 
   return signedUrl;
-}
+};

@@ -1,4 +1,4 @@
-import { getDataFilesByOrganization } from '@/lib/actions/actions';
+import { getDataFilesByOrganization } from '@/lib/actions';
 import { getSession } from '@/lib/auth';
 import DataTable from '@/components/ui/data-table';
 import { dataFileTableColumns } from './file-table-columns';

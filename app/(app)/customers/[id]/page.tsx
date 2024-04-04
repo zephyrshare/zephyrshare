@@ -1,4 +1,4 @@
-import { getOrganizationById } from '@/lib/actions/actions';
+import { getOrganizationById } from '@/lib/actions';
 import { Organization } from '@prisma/client';
 
 export default async function CustomerPage({ params }: { params: { id: string } }) {

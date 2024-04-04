@@ -22,7 +22,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { minimumDelay } from '@/lib/utils';
-import { addAgreement } from '@/lib/actions/actions';
+import { addAgreement } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
 
 const formSchema = z.object({

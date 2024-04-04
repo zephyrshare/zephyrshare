@@ -1,4 +1,4 @@
-import { getAgreementsByOrganization } from '@/lib/actions/actions';
+import { getAgreementsByOrganization } from '@/lib/actions';
 import DataTable from '@/components/ui/data-table';
 import { agreementTableColumns } from './agreement-table-columns';
 import UploadAgreementButton from '@/components/upload-agreement-button';
