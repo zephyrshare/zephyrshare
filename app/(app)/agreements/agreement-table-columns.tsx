@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { deleteAgreement } from '@/lib/actions';
+import { deleteAgreement } from '@/lib/actions/actions';
 import { Agreement } from '@prisma/client';
 
 export const agreementTableColumns: ColumnDef<Agreement>[] = [

@@ -1,5 +1,5 @@
 import { getSession } from "@/lib/auth";
-import { getOrganizations } from '@/lib/actions';
+import { getOrganizations } from '@/lib/actions/actions';
 import rbac, { Privilege } from '@/lib/user-roles-privileges';
 import DataTable from '@/components/ui/data-table';
 import { customersTableColumns } from './customers-table-columns';

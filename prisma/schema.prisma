@@ -21,6 +21,7 @@ model User {
   role           String        @default("OWNER_ADMIN")
   accounts       Account[]     // User can have multiple Accounts (these are the OAuth accounts)
   agreements     Agreement[]
+  dataFiles      DataFile[]
   sessions       Session[]
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       // The ID of the organization the user belongs to. Must be nullable since the user signs up before joining an organization.
@@ -77,6 +78,7 @@ model Organization {
   role                OrganizationRole       @default(SELLER)
   users               User[]
   agreements          Agreement[]
+  dataFiles           DataFile[]
   buyerRelationships  CustomerRelationship[] @relation("BuyerRelationships")
   sellerRelationships CustomerRelationship[] @relation("SellerRelationships")
 }
@@ -115,4 +117,16 @@ model Agreement {
   organizationId String?
 
   @@index([organizationId])
+}
+
+model DataFile {
+  id              String   @id @default(cuid())
+  name            String
+  file            String
+  contentType     String
+  uploaderId      String
+  uploader        User     @relation(fields: [uploaderId], references: [id])
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  createdAt       DateTime @default(now())
 }
