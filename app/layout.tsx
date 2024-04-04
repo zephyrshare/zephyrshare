@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { Providers } from './providers';
-import { Inter } from 'next/font/google';
+import { IBM_Plex_Sans } from 'next/font/google';
 import '@/styles/globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+
+// const inter = Inter({ subsets: ['latin'] }); // Switching away for now
+const inter = IBM_Plex_Sans({ weight: ['100', '200', '300', '500', '700'], subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Create Next App',
