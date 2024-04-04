@@ -10,7 +10,6 @@ import {
   Presentation as PresentationChartBarIcon,
   Image as PhotoIcon,
 } from "lucide-react";
-// import { usePlan } from "@/lib/swr/use-billing";
 
 function fileIcon(fileType: string) {
   switch (fileType) {
