@@ -8,17 +8,7 @@ export default function LoginPage() {
       <h1 className="mt-6 text-center font-cal text-3xl dark:text-white">Zephyr Share</h1>
       <p className="mt-2 text-center text-sm text-stone-600 dark:text-stone-400">
         Platform to securely share your company's data
-        <br />
-        <a
-          className="font-medium text-black hover:text-stone-800 dark:text-stone-300 dark:hover:text-stone-100"
-          href="https://vercel.com/blog/platforms-starter-kit"
-          rel="noreferrer"
-          target="_blank"
-        >
-          Read the announcement.
-        </a>
       </p>
-
       <div className="mx-auto mt-4 w-11/12 max-w-xs sm:w-full">
         <Suspense
           fallback={

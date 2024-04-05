@@ -32,7 +32,7 @@ export default function Navbar() {
                   </div>
                 </Link>
                 <Link href="/login">
-                  <div className="text-gray-600 hover:text-gray-400 px-3 py-2 rounded-md text-sm font-medium">
+                  <div className="text-gray-600 hover:text-gray-400 hover:shadow-md px-3 py-2 rounded-lg text-sm font-medium border border-slate-500 transition duration-50">
                     Login
                   </div>
                 </Link>

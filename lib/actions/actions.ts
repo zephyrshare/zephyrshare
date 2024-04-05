@@ -343,7 +343,7 @@ export const deleteDataFile = async (dataFileId: string) => {
     console.log('Deleted data file:', deletedDataFile);
 
     // Optionally, revalidate the data files page to reflect the deletion
-    await revalidatePath('/datafiles');
+    await revalidatePath('/dashboard');
 
     return deletedDataFile;
   } catch (error: any) {

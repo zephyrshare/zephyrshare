@@ -58,12 +58,6 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         icon: <Newspaper width={18} />,
       },
       {
-        name: 'Data Files',
-        href: `${baseUrlPath}/datafiles`,
-        isActive: segments.includes('datafiles'),
-        icon: <FileArchive width={18} />,
-      },
-      {
         name: 'Settings',
         href: `${baseUrlPath}/settings`,
         isActive: segments.includes('settings'),
