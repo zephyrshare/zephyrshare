@@ -18,13 +18,13 @@ import { getS3PresignedUploadUrl } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
 
 export default function UploadDataFileButton({ user }: { user: User | undefined }) {
-  if (!user) {
-    return null;
-  }
-
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
+
+  if (!user) {
+    return null;
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
