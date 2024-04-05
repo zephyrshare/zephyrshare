@@ -17,7 +17,11 @@ import { addDataFile } from '@/lib/actions';
 import { getS3PresignedUploadUrl } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
 
-export default function UploadDataFileButton({ user }: { user: User }) {
+export default function UploadDataFileButton({ user }: { user: User | undefined }) {
+  if (!user) {
+    return null;
+  }
+
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
@@ -63,8 +67,8 @@ export default function UploadDataFileButton({ user }: { user: User }) {
           'Content-Type': currentFile.type,
         },
       };
-      console.log('Request options', opt)
-      const response = await fetch(uploadUrl, opt)
+      console.log('Request options', opt);
+      const response = await fetch(uploadUrl, opt);
 
       console.log('response', response);
     } catch (error) {
