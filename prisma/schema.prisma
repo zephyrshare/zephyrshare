@@ -79,6 +79,7 @@ model Organization {
   users               User[]
   agreements          Agreement[]
   dataFiles           DataFile[]
+  dataSources         DataSouce[]
   buyerRelationships  CustomerRelationship[] @relation("BuyerRelationships")
   sellerRelationships CustomerRelationship[] @relation("SellerRelationships")
 }
@@ -119,6 +120,7 @@ model Agreement {
   @@index([organizationId])
 }
 
+
 model DataFile {
   id              String   @id @default(cuid())
   name            String
@@ -126,6 +128,20 @@ model DataFile {
   contentType     String
   uploaderId      String
   uploader        User     @relation(fields: [uploaderId], references: [id])
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  createdAt       DateTime @default(now())
+  dataSouceId     String
+  dataSource      DataSouce @relation(fields: [dataSouceId], references: [id])
+}
+
+
+// Represents a collection of related data files that are uploaded by the user
+model DataSouce {
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  dataFiles       DataFile[]
   organizationId  String
   organization    Organization @relation(fields: [organizationId], references: [id])
   createdAt       DateTime @default(now())

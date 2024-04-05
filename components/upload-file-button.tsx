@@ -54,11 +54,23 @@ export default function UploadDataFileButton({ user }: { user: User }) {
 
     console.log('uploadUrl', uploadUrl);
 
-    // PUT call to upload the file on the client side to the S3 Pre-signed URL
+    try {
+      // PUT call to upload the file on the client side to the S3 Pre-signed URL
+      const opt = {
+        method: 'PUT',
+        body: currentFile,
+        headers: {
+          'Content-Type': currentFile.type,
+        },
+      };
+      console.log('Request options', opt)
+      const response = await fetch(uploadUrl, opt)
 
-    // Create new DataFile record in the database
-    // Save the
-    // const newDataFile = await addDataFile({
+      console.log('response', response);
+    } catch (error) {
+      console.error('Error uploading file', error);
+      toast.error('Error uploading file');
+    }
 
     setUploading(false);
     setOpen(false);
