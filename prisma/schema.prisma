@@ -131,8 +131,8 @@ model DataFile {
   organizationId  String
   organization    Organization @relation(fields: [organizationId], references: [id])
   createdAt       DateTime @default(now())
-  dataSouceId     String
-  dataSource      DataSouce @relation(fields: [dataSouceId], references: [id])
+  // dataSouceId     String
+  // dataSource      DataSouce @relation(fields: [dataSouceId], references: [id])
 }
 
 
@@ -141,7 +141,7 @@ model DataSouce {
   id              String   @id @default(cuid())
   name            String
   description     String?
-  dataFiles       DataFile[]
+  // dataFiles       DataFile[]
   organizationId  String
   organization    Organization @relation(fields: [organizationId], references: [id])
   createdAt       DateTime @default(now())
