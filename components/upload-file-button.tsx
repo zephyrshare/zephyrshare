@@ -45,7 +45,7 @@ export default function UploadDataFileButton({ user }: { user: User | undefined 
     // size: 3381664
     // type: "application/pdf"
 
-    const organizationId = user.organizationId;
+    const organizationId = user?.organizationId;
     const fileId = uuid();
     const s3Key = `${organizationId}/${fileId}`;
 
