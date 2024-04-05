@@ -62,13 +62,19 @@ export async function addDataFile(file: any): Promise<any> {
   console.log('Adding data file:', file);
   try {
     const session = await getSession();
+
+    if (!session?.user.organizationId) {
+      throw new Error('User not associated with an organization. Cannot add data file.');
+    }
+
+    const organizationId = session?.user.organizationId;
     const newFile = await prisma.dataFile.create({
       data: {
         name: file.name,
         file: file.uploadedFileUrl, // Replace with actual uploaded file URL
         contentType: file.type,
         uploaderId: session?.user.id,
-        organizationId: session?.user.organizationId || undefined,
+        organizationId
       },
     });
     return newFile;
