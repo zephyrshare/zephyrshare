@@ -13,14 +13,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { addDataFile } from '@/lib/actions';
-import { getS3PresignedUploadUrl } from '@/lib/actions';
+import { addMarketDataFile, addMarketDataSource, getS3PresignedUploadUrl } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
 
-export default function UploadDataFileButton({ user }: { user: User | undefined }) {
+export default function AddMarketDataButton({ user }: { user: User | undefined }) {
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const [dataSourceName, setDataSourceName] = useState<string>('');
+  const [dataSourceDescription, setDataSourceDescription] = useState<string>('');
 
   if (!user) {
     return null;
@@ -28,6 +29,29 @@ export default function UploadDataFileButton({ user }: { user: User | undefined 
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!user?.organizationId) {
+      toast.error('User not associated with an organization. Cannot add data source.');
+      return;
+    }
+
+    const organizationId = user?.organizationId;
+    let marketDataSourceRes;
+
+    try {
+      // Represents a collection of related data files that are uploaded by the user
+      marketDataSourceRes = await addMarketDataSource({
+        id: '1',
+        name: dataSourceName || 'ahhhh',
+        description: dataSourceDescription,
+        organizationId,
+        createdAt: new Date()
+      });
+    } catch (error) {
+      console.error('Error adding Market Data Source:', error);
+      toast.error('Error adding Market Data Source');
+      return;
+    }
 
     // Check if the file is chosen and prevent form submission if not
     if (!currentFile) {
@@ -45,7 +69,6 @@ export default function UploadDataFileButton({ user }: { user: User | undefined 
     // size: 3381664
     // type: "application/pdf"
 
-    const organizationId = user?.organizationId;
     const fileId = uuid();
     const s3Key = `${organizationId}/${fileId}`;
 
@@ -75,6 +98,29 @@ export default function UploadDataFileButton({ user }: { user: User | undefined 
       console.error('Error uploading file', error);
       toast.error('Error uploading file');
     }
+
+    try {
+      // Add the new Market Data File record to the database
+      const marketDataFileResponse = await addMarketDataFile({
+        id: fileId,
+        name: currentFile.name,
+        file: s3Key,
+        contentType: currentFile.type,
+        uploaderId: user.id,
+        organizationId,
+        marketDataSourceId: marketDataSourceRes.id,
+        createdAt: new Date()
+      });
+
+
+
+      toast.success('Market Data Record added successfully');
+
+    } catch (error) {
+      console.error('Error adding Market Data Record:', error);
+      toast.error('Error adding Market Data Record');
+    }
+
 
     setUploading(false);
     setOpen(false);

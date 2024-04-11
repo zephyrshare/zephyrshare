@@ -16,12 +16,12 @@ model User {
   email          String?       @unique
   emailVerified  DateTime?
   image          String?
-  createdAt      DateTime      @default(now())
+  createdAt      DateTime?      @default(now())
   updatedAt      DateTime      @updatedAt
   role           String        @default("OWNER_ADMIN")
   accounts       Account[]     // User can have multiple Accounts (these are the OAuth accounts)
   agreements     Agreement[]
-  dataFiles      DataFile[]
+  marketDataFiles      MarketDataFile[]
   sessions       Session[]
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       // The ID of the organization the user belongs to. Must be nullable since the user signs up before joining an organization.
@@ -74,12 +74,12 @@ model Organization {
   description         String?
   emailDomain         String?                @unique    // The domain of the organization's email address
   logo                String?
-  createdAt           DateTime               @default(now())
+  createdAt           DateTime?               @default(now())
   role                OrganizationRole       @default(SELLER)
   users               User[]
   agreements          Agreement[]
-  dataFiles           DataFile[]
-  dataSources         DataSouce[]
+  marketDataFiles           MarketDataFile[]
+  marketDataSources         MarketDataSource[]
   buyerRelationships  CustomerRelationship[] @relation("BuyerRelationships")
   sellerRelationships CustomerRelationship[] @relation("SellerRelationships")
 }
@@ -97,7 +97,7 @@ model CustomerRelationship {
   buyerOrganization  Organization @relation("BuyerRelationships", fields: [buyerOrgId], references: [id])
   sellerOrgId        String // The ID of the selling organization
   sellerOrganization Organization @relation("SellerRelationships", fields: [sellerOrgId], references: [id])
-  createdAt          DateTime     @default(now()) // When this relationship was established
+  createdAt          DateTime?     @default(now()) // When this relationship was established
 
   @@unique([buyerOrgId, sellerOrgId])
 }
@@ -110,7 +110,7 @@ model Agreement {
   contentType    String // Content Type of uploaded agreement (e.g. application/pdf, plain/text, etc.)
   startDate      DateTime?
   endDate        DateTime?
-  createdAt      DateTime     @default(now())
+  createdAt      DateTime?     @default(now())
   updatedAt      DateTime     @updatedAt
   uploader       User?        @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
   uploaderId     String?
@@ -121,7 +121,7 @@ model Agreement {
 }
 
 
-model DataFile {
+model MarketDataFile {
   id              String   @id @default(cuid())
   name            String
   file            String
@@ -130,19 +130,19 @@ model DataFile {
   uploader        User     @relation(fields: [uploaderId], references: [id])
   organizationId  String
   organization    Organization @relation(fields: [organizationId], references: [id])
-  createdAt       DateTime @default(now())
-  // dataSouceId     String
-  // dataSource      DataSouce @relation(fields: [dataSouceId], references: [id])
+  createdAt       DateTime? @default(now())
+  marketDataSourceId     String
+  marketDataSource      MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
 }
 
 
 // Represents a collection of related data files that are uploaded by the user
-model DataSouce {
+model MarketDataSource {
   id              String   @id @default(cuid())
   name            String
   description     String?
-  // dataFiles       DataFile[]
+  marketDataFiles       MarketDataFile[]
   organizationId  String
   organization    Organization @relation(fields: [organizationId], references: [id])
-  createdAt       DateTime @default(now())
+  createdAt       DateTime? @default(now())
 }
