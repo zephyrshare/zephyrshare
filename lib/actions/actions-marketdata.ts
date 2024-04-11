@@ -97,6 +97,10 @@ export async function addMarketDataSource(dataSource: MarketDataSource): Promise
         organizationId,
       },
     });
+
+    // Revalidate the market data page to reflect the new data source
+    revalidatePath('/marketdata');
+
     return newDataSource;
   } catch (error) {
     console.error('Error adding Market Data Source:', error);

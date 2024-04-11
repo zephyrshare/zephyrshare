@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { User } from '@prisma/client';
 import { v4 as uuid } from 'uuid';
 import { Button } from '@/components/ui/button';
@@ -15,41 +18,60 @@ import {
 } from '@/components/ui/dialog';
 import { addMarketDataFile, addMarketDataSource, getS3PresignedUploadUrl } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+
+
+const formSchema = z.object({
+  dataSourceName: z.string().min(1, 'Market Data Name is required.').max(50, 'Market Data Name must not exceed 50 characters.'),
+  dataSourceDescription: z.string().max(400, 'Description must not exceed 400 characters.').optional(),
+});
 
 export default function AddMarketDataButton({ user }: { user: User | undefined }) {
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState<boolean>(false);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
-  const [dataSourceName, setDataSourceName] = useState<string>('');
-  const [dataSourceDescription, setDataSourceDescription] = useState<string>('');
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      dataSourceName: '',
+      dataSourceDescription: '',
+    },
+  });
 
   if (!user) {
     return null;
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function onSubmit(data: z.infer<typeof formSchema>) {
 
     if (!user?.organizationId) {
       toast.error('User not associated with an organization. Cannot add data source.');
       return;
     }
 
+    setUploading(true);
+
+    const { dataSourceName, dataSourceDescription } = data;
     const organizationId = user?.organizationId;
     let marketDataSourceRes;
 
     try {
       // Represents a collection of related data files that are uploaded by the user
       marketDataSourceRes = await addMarketDataSource({
-        id: '1',
-        name: dataSourceName || 'ahhhh',
-        description: dataSourceDescription,
+        id: uuid(),
+        name: dataSourceName,
+        description: dataSourceDescription || null,
         organizationId,
         createdAt: new Date()
       });
     } catch (error) {
       console.error('Error adding Market Data Source:', error);
       toast.error('Error adding Market Data Source');
+      setUploading(false);
+      setOpen(false);
       return;
     }
 
@@ -58,8 +80,6 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
       toast.error('Please select a file to upload.');
       return;
     }
-
-    setUploading(true);
 
     // Sample uploaded file object
     // path: "2024-02 Copper Mountain Ski Resort FY24_Trail_Map.pdf"
@@ -127,7 +147,10 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
   }
 
   function handleOpenChange(isOpen: boolean) {
-    currentFile !== null && setCurrentFile(null);
+    if (!isOpen) {
+      form.reset(); // Reset form when dialog is closed
+      setCurrentFile(null);
+    }
     setOpen(isOpen);
   }
 
@@ -140,22 +163,47 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Upload a File</DialogTitle>
-          <DialogDescription>Upload a new file here. Click upload when you're done.</DialogDescription>
+          <DialogTitle>Add a Market Data Source</DialogTitle>
+          <DialogDescription>Add a market data source and upload a new file here. Click add when you're done.</DialogDescription>
         </DialogHeader>
-        <form encType="multipart/form-data" onSubmit={handleSubmit} className="flex flex-col">
-          <div className="pb-6">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+            <FormField
+              control={form.control}
+              name="dataSourceName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Market Data Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Market Data Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dataSourceDescription"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Describe the Market Data (Optional)" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="pb-6">
               <UploadDropzone currentFile={currentFile} setCurrentFile={setCurrentFile} />
             </div>
-          </div>
-
-          <div className="flex justify-center">
-            <Button type="submit" className="w-full lg:w-1/2" disabled={uploading || !currentFile}>
-              {uploading ? 'Uploading...' : 'Upload Document'}
-            </Button>
-          </div>
-        </form>
+            <div className="flex justify-center">
+              <Button type="submit" className="w-full lg:w-1/2" disabled={uploading || !currentFile}>
+                {uploading ? 'Adding...' : 'Add Market Data'}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
