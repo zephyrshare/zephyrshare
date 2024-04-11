@@ -17,7 +17,7 @@ import { Organization } from '@prisma/client';
 export const customersTableColumns: ColumnDef<Organization>[] = [
   {
     accessorKey: 'name',
-    header: 'Name',
+    header: 'Organization Name',
     cell: ({ row }) => {
       const customer = row.original;
       return (

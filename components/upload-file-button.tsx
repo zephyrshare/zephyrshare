@@ -89,7 +89,7 @@ export default function UploadDataFileButton({ user }: { user: User | undefined 
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="default" size="default" className="w-36">
-          Upload File
+          + Add Market Data
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

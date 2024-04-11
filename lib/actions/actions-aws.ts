@@ -1,27 +1,21 @@
 'use server';
 
-// import { S3 } from 'aws-sdk';
+import { PutObjectCommand, GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-// // Load the AWS SDK and create a new S3 client
-// const s3 = new S3({
-//   region: process.env.AWS_REGION,
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-// });
+export const getS3PresignedUploadUrl = async (s3key: string) => {
+  const client = new S3Client({ region: process.env.AWS_REGION });
+  const command = new PutObjectCommand({ Bucket: process.env.AWS_FILES_BUCKET_NAME, Key: s3key });
+  const signedUrl = await getSignedUrl(client, command, { expiresIn: 3600 /* 5 minutes */});
+  console.log('signedUrl in actions-aws', signedUrl);
+  return signedUrl;
+};
 
-// export const getS3PresignedUploadUrl = async (s3Key: string) => {
-//   const params = {
-//     Bucket: process.env.AWS_FILES_BUCKET_NAME,
-//     Key: s3Key,
-//     Expires: 60 * 5, // 5 minutes
-//   };
 
-//   console.log('params in actions-aws', params);
-
-//   const signedUrl = await s3.getSignedUrlPromise('putObject', params);
-
-//   console.log('signedUrl in actions-aws', signedUrl);
-
-//   return signedUrl;
-// };
-
+export const getS3PresignedDownloadUrl = async (s3key: string) => {
+  const client = new S3Client({ region: process.env.AWS_REGION });
+  const command = new GetObjectCommand({ Bucket: process.env.AWS_FILES_BUCKET_NAME, Key: s3key });
+  const signedUrl = await getSignedUrl(client, command, { expiresIn: 3600 /* 5 minutes */});
+  console.log('signedUrl in actions-aws', signedUrl);
+  return signedUrl;
+}

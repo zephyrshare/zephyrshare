@@ -53,8 +53,8 @@ export default function AddCustomerButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" size="default" className="w-36">
-          Add Customer
+        <Button variant="default" size="default" className="max-w-[250px]">
+          + Customer Organization
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
