@@ -98,11 +98,9 @@ export default function UploadDataFileButton({ user }: { user: User | undefined 
           <DialogDescription>Upload a new file here. Click upload when you're done.</DialogDescription>
         </DialogHeader>
         <form encType="multipart/form-data" onSubmit={handleSubmit} className="flex flex-col">
-          <div className="space-y-1">
-            <div className="pb-6">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <UploadDropzone currentFile={currentFile} setCurrentFile={setCurrentFile} />
-              </div>
+          <div className="pb-6">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <UploadDropzone currentFile={currentFile} setCurrentFile={setCurrentFile} />
             </div>
           </div>
 

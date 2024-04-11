@@ -10,8 +10,6 @@ import {
   Newspaper,
   Settings,
   HeartHandshake,
-  FileArchive,
-  ArrowRightFromLine
 } from 'lucide-react';
 import { usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
@@ -28,9 +26,9 @@ export default function Sidebar({ children }: { children: ReactNode }) {
   const tabs = useMemo(() => {
     return [
       {
-        name: 'Dashboard',
-        href: `${baseUrlPath}/dashboard`,
-        isActive: segments.includes('dashboard'),
+        name: 'Market Data',
+        href: `${baseUrlPath}/marketdata`,
+        isActive: segments.includes('marketdata'),
         icon: <LayoutDashboard width={18} />,
       },
       {
@@ -38,12 +36,6 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         href: `${baseUrlPath}/contracts`,
         isActive: segments.includes('contracts'),
         icon: <HeartHandshake width={18} />,
-      },
-      {
-        name: 'Actions',
-        href: `${baseUrlPath}/actions`,
-        isActive: segments.includes('actions'),
-        icon: <ArrowRightFromLine width={18} />,
       },
       {
         name: 'Customers',

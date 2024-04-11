@@ -47,7 +47,7 @@ export async function deleteDataFile(dataFileId: string) {
     console.log('Deleted data file:', deletedDataFile);
 
     // Optionally, revalidate the data files page to reflect the deletion
-    await revalidatePath('/dashboard');
+    await revalidatePath('/marketdata');
 
     return deletedDataFile;
   } catch (error: any) {

@@ -39,10 +39,10 @@ export default async function middleware(req: NextRequest) {
     // @ts-ignore
     const baseUrlPath = getBaseUrlPath(session?.user.role);
 
-    // Redirect to dashboard if authenticated and on login page
+    // Redirect to /marketdata if authenticated and on login page
     if (path === '/login' || path === '/') {
-      const dashboardUrl = new URL(`${baseUrlPath}/dashboard`, req.url);
-      return NextResponse.redirect(dashboardUrl);
+      const marketDataUrl = new URL(`${baseUrlPath}/marketdata`, req.url);
+      return NextResponse.redirect(marketDataUrl);
     }
   }
 
