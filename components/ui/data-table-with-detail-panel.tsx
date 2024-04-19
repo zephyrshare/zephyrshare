@@ -12,15 +12,17 @@ export default function DataTableWithDetailPanel<TData, TValue>({ columns, data 
     setPanelIsOpen(true);
   };
 
-  // When the user clicks a row of the DataTable, the details panel opens up on the right half of the screen and shows details about the row
   return (
-    <>
-      <DataTable columns={columns} data={data} onRowClick={handleRowClick} />
+    <div className="flex w-full">
+      {/* DataTable with conditional width based on panel state */}
+      <div className={`w-full ${panelIsOpen ? 'lg:w-1/2' : ''}`}>
+        <DataTable columns={columns} data={data} onRowClick={handleRowClick} />
+      </div>
 
       {/* Details Panel */}
       {panelIsOpen && (
-        <div className="fixed inset-0 bg-white dark:bg-gray-800 bg-opacity-90 dark:bg-opacity-90 z-50">
-          <div className="flex flex-col h-full">
+        <div className="w-full lg:w-1/2 h-full">
+          <div className="flex flex-col h-full bg-white">
             <div className="flex justify-end p-4">
               <button
                 className="text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
@@ -31,19 +33,16 @@ export default function DataTableWithDetailPanel<TData, TValue>({ columns, data 
             </div>
             <div className="flex flex-1 overflow-y-auto">
               <div className="flex-1 p-4">
-                {/* Details Panel Content */}
-                <div className="flex-1 p-4">
-                  <h2 className="text-lg font-medium dark:text-white">Details</h2>
-                  {selectedItem &&
-                    Object.entries(selectedItem).map(([key, value]) => (
-                      <p key={key} className="text-gray-500 dark:text-gray-400">{`${key}: ${value}`}</p>
-                    ))}
-                </div>
+                {/* Dynamic content based on selected item */}
+                <h2 className="text-lg font-medium dark:text-white">Details</h2>
+                {selectedItem && Object.entries(selectedItem).map(([key, value]) => (
+                  <p key={key} className="text-gray-500 dark:text-gray-400">{`${key}: ${value}`}</p>
+                ))}
               </div>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
