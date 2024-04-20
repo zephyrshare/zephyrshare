@@ -9,23 +9,23 @@ datasource db {
 }
 
 model User {
-  id             String        @id @default(cuid())
-  name           String?
-  username       String?       // If you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
-  gh_username    String?
-  email          String?       @unique
-  emailVerified  DateTime?
-  image          String?
-  createdAt      DateTime?      @default(now())
-  updatedAt      DateTime      @updatedAt
-  role           String        @default("OWNER_ADMIN")
-  accounts       Account[]     // User can have multiple Accounts (these are the OAuth accounts)
-  agreements     Agreement[]
-  marketDataFiles      MarketDataFile[]
-  sessions       Session[]
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  organizationId String?       // The ID of the organization the user belongs to. Must be nullable since the user signs up before joining an organization.
-  apiToken       String?       @unique
+  id              String           @id @default(cuid())
+  name            String?
+  username        String? // If you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
+  gh_username     String?
+  email           String?          @unique
+  emailVerified   DateTime?
+  image           String?
+  createdAt       DateTime?        @default(now())
+  updatedAt       DateTime         @updatedAt
+  role            String           @default("OWNER_ADMIN")
+  accounts        Account[] // User can have multiple Accounts (these are the OAuth accounts)
+  agreements      DataAgreement[]
+  marketDataFiles MarketDataFile[]
+  sessions        Session[]
+  organization    Organization?    @relation(fields: [organizationId], references: [id])
+  organizationId  String? // The ID of the organization the user belongs to. Must be nullable since the user signs up before joining an organization.
+  apiToken        String?          @unique
 }
 
 model Account {
@@ -69,19 +69,19 @@ model VerificationToken {
 }
 
 model Organization {
-  id                  String                 @id @default(cuid())
+  id                  String             @id @default(cuid())
   name                String
   description         String?
-  emailDomain         String?                @unique    // The domain of the organization's email address
+  emailDomain         String?            @unique // The domain of the organization's email address
   logo                String?
-  createdAt           DateTime?               @default(now())
-  role                OrganizationRole       @default(SELLER)
+  createdAt           DateTime?          @default(now())
+  role                OrganizationRole   @default(SELLER)
   users               User[]
-  agreements          Agreement[]
-  marketDataFiles           MarketDataFile[]
-  marketDataSources         MarketDataSource[]
-  buyerRelationships  CustomerRelationship[] @relation("BuyerRelationships")
-  sellerRelationships CustomerRelationship[] @relation("SellerRelationships")
+  agreements          DataAgreement[]
+  marketDataFiles     MarketDataFile[]
+  marketDataSources   MarketDataSource[]
+  sellerDataContracts DataContract[]     @relation("SellerDataContracts")
+  buyerDataContracts  DataContract[]     @relation("BuyerDataContracts")
 }
 
 enum OrganizationRole {
@@ -91,58 +91,63 @@ enum OrganizationRole {
   ZEPHYR
 }
 
-model CustomerRelationship {
-  id                 String       @id @default(cuid())
-  buyerOrgId         String // The ID of the buying organization
-  buyerOrganization  Organization @relation("BuyerRelationships", fields: [buyerOrgId], references: [id])
-  sellerOrgId        String // The ID of the selling organization
-  sellerOrganization Organization @relation("SellerRelationships", fields: [sellerOrgId], references: [id])
-  createdAt          DateTime?     @default(now()) // When this relationship was established
-
-  @@unique([buyerOrgId, sellerOrgId])
-}
-
-model Agreement {
-  id             String        @id @default(cuid())
+model DataAgreement {
+  id             String         @id @default(cuid())
   name           String
   description    String?
   file           String // URL file location (S3, Vercel blob, etc.)
   contentType    String // Content Type of uploaded agreement (e.g. application/pdf, plain/text, etc.)
-  startDate      DateTime?
-  endDate        DateTime?
-  createdAt      DateTime?     @default(now())
-  updatedAt      DateTime     @updatedAt
-  uploader       User?        @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  createdAt      DateTime?      @default(now())
+  updatedAt      DateTime       @updatedAt
+  uploader       User?          @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
   uploaderId     String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organization   Organization?  @relation(fields: [organizationId], references: [id])
   organizationId String?
+  dataContracts  DataContract[]
 
   @@index([organizationId])
 }
 
-
-model MarketDataFile {
-  id              String   @id @default(cuid())
-  name            String
-  file            String
-  contentType     String
-  uploaderId      String
-  uploader        User     @relation(fields: [uploaderId], references: [id])
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id])
-  createdAt       DateTime? @default(now())
-  marketDataSourceId     String
-  marketDataSource      MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
+model DataContract {
+  id                 String           @id @default(cuid())
+  marketDataSourceId String
+  marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
+  agreementId        String
+  contractAmount     Float
+  buyerOrgId         String // The ID of the buying organization
+  buyerOrganization  Organization     @relation("BuyerDataContracts", fields: [buyerOrgId], references: [id])
+  sellerOrgId        String // The ID of the selling organization
+  sellerOrganization Organization     @relation("SellerDataContracts", fields: [sellerOrgId], references: [id])
+  agreement          DataAgreement    @relation(fields: [agreementId], references: [id])
+  startDate          DateTime?
+  endDate            DateTime?
+  allowDownload      Boolean          @default(false)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
 }
 
+model MarketDataFile {
+  id                 String           @id @default(cuid())
+  name               String
+  file               String
+  contentType        String
+  uploaderId         String
+  uploader           User             @relation(fields: [uploaderId], references: [id])
+  organizationId     String
+  organization       Organization     @relation(fields: [organizationId], references: [id])
+  createdAt          DateTime?        @default(now())
+  marketDataSourceId String
+  marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
+}
 
 // Represents a collection of related data files that are uploaded by the user
 model MarketDataSource {
-  id              String   @id @default(cuid())
+  id              String           @id @default(cuid())
   name            String
   description     String?
-  marketDataFiles       MarketDataFile[]
+  marketDataFiles MarketDataFile[]
   organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id])
-  createdAt       DateTime? @default(now())
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+  createdAt       DateTime?        @default(now())
+  dataContracts   DataContract[]
 }
