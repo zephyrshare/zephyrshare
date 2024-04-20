@@ -15,13 +15,13 @@ export default function DataTableWithDetailPanel<TData, TValue>({ columns, data 
   return (
     <div className="flex w-full">
       {/* DataTable with conditional width based on panel state */}
-      <div className={`w-full ${panelIsOpen ? 'lg:w-1/2' : ''}`}>
+      <div className={`w-full ${panelIsOpen ? 'lg:w-3/5' : ''}`}>
         <DataTable columns={columns} data={data} onRowClick={handleRowClick} />
       </div>
 
       {/* Details Panel */}
       {panelIsOpen && (
-        <div className="w-full lg:w-1/2 h-full">
+        <div className="w-full lg:w-2/5 h-full">
           <div className="flex flex-col h-full bg-white">
             <div className="flex justify-end p-4">
               <button

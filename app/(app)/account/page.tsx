@@ -1,3 +1,4 @@
+import PageContainer from '@/components/ui/page-container';
 import Form from '@/components/form';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -11,7 +12,7 @@ export default async function AccountPage() {
   }
 
   return (
-    <div className="flex max-w-screen-xl flex-col space-y-12 py-10 px-8 md:p-8">
+    <PageContainer>
       <div className="flex flex-col space-y-6">
         <h1 className="font-cal text-xl font-medium dark:text-white">Account</h1>
         <Form
@@ -41,6 +42,6 @@ export default async function AccountPage() {
         />
         <APITokenForm initialToken={session.user.apiToken} />
       </div>
-    </div>
+    </PageContainer>
   );
 }

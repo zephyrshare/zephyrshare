@@ -1,3 +1,4 @@
+import PageContainer from '@/components/ui/page-container';
 import { getMarketDataSourcesByOrganization } from '@/lib/actions';
 import { getSession } from '@/lib/auth';
 import AIChat from '@/components/ai-chat';
@@ -12,11 +13,11 @@ export default async function Page() {
   const user = session?.user;
 
   return (
-    <div className="flex max-w-screen-xl flex-col space-y-12 py-10 px-8 md:p-8">
+    <PageContainer>
       <h1 className="font-cal text-xl font-medium dark:text-white">Market Data</h1>
       <AIChat />
       <AddMarketDataButton user={user} />
       <DataTableWithDetailPanel columns={marketDataSourceTableColumns} data={marketDataSources} />
-    </div>
+    </PageContainer>
   );
 }
