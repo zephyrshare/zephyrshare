@@ -3,14 +3,13 @@
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
-import { Agreement } from '@prisma/client';
+import { DataAgreement } from '@prisma/client';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export async function addAgreement(agreementData: any) {
   const session = await getSession();
   try {
-    const newAgreement = await prisma.agreement.create({
+    const newAgreement = await prisma.dataAgreement.create({
       data: {
         ...agreementData,
         uploaderId: session?.user.id,
@@ -34,9 +33,9 @@ export async function addAgreement(agreementData: any) {
 /**
  * Get all agreements
  */
-export async function getAgreements(): Promise<Agreement[]> {
+export async function getAgreements(): Promise<DataAgreement[]> {
   try {
-    const agreements = await prisma.agreement.findMany();
+    const agreements = await prisma.dataAgreement.findMany();
     return agreements.map((a) => ({
       id: a.id,
       name: a.name,
@@ -46,21 +45,19 @@ export async function getAgreements(): Promise<Agreement[]> {
       file: a.file,
       contentType: a.contentType,
       uploaderId: a.uploaderId,
-      startDate: a.startDate,
-      endDate: a.endDate,
       organizationId: a.organizationId,
     }));
   } catch (error: any) {
     console.error('Error fetching agreements:', error);
     throw new Error(error.message);
   }
-};
+}
 
 /**
  * Get all agreements that belong to an organization
  * Use the organizationId from the session.user object
  */
-export async function getAgreementsByOrganization(): Promise<Agreement[]> {
+export async function getAgreementsByOrganization(): Promise<DataAgreement[]> {
   const session = await getSession();
   console.log('Session in getAgreementsByOrganization:', session);
   if (!session?.user.organizationId) {
@@ -69,10 +66,13 @@ export async function getAgreementsByOrganization(): Promise<Agreement[]> {
 
   noStore(); // Prevent caching of this page
 
-  console.log('Fetching agreements for organization:', session.user.organizationId);
+  console.log(
+    'Fetching agreements for organization:',
+    session.user.organizationId
+  );
 
   try {
-    const agreements = await prisma.agreement.findMany({
+    const agreements = await prisma.dataAgreement.findMany({
       where: {
         organizationId: session.user.organizationId,
       },
@@ -86,15 +86,13 @@ export async function getAgreementsByOrganization(): Promise<Agreement[]> {
       file: a.file,
       contentType: a.contentType,
       uploaderId: a.uploaderId,
-      startDate: a.startDate,
-      endDate: a.endDate,
       organizationId: a.organizationId,
     }));
   } catch (error: any) {
     console.error('Error fetching organization agreements:', error);
     throw new Error(error.message);
   }
-};
+}
 
 export async function deleteAgreement(agreementId: string) {
   const session = await getSession();
@@ -107,7 +105,7 @@ export async function deleteAgreement(agreementId: string) {
   }
 
   try {
-    const deletedAgreement = await prisma.agreement.delete({
+    const deletedAgreement = await prisma.dataAgreement.delete({
       where: {
         id: agreementId,
       },
@@ -124,4 +122,4 @@ export async function deleteAgreement(agreementId: string) {
       error: error.message,
     };
   }
-};
+}
