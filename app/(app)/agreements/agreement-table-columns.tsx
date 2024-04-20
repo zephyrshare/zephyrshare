@@ -12,9 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { deleteAgreement } from '@/lib/actions';
-import { Agreement } from '@prisma/client';
+import { DataAgreement } from '@prisma/client';
 
-export const agreementTableColumns: ColumnDef<Agreement>[] = [
+export const agreementTableColumns: ColumnDef<DataAgreement>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
