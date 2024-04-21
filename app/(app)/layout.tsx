@@ -1,10 +1,12 @@
-import { ReactNode, Suspense } from "react";
-import SidebarProfile from "@/components/sidebar-profile";
-import Sidebar from "@/components/sidebar";
+import { ReactNode, Suspense } from 'react';
+import SidebarProfile from '@/components/sidebar-profile';
+import Sidebar from '@/components/sidebar';
+import TopNavbar from '@/components/top-navbar';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <div>
+    <div className="relative">
+      <TopNavbar />
       <Sidebar>
         <Suspense fallback={<div>Loading...</div>}>
           <SidebarProfile />
