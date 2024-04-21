@@ -20,6 +20,7 @@ import {
 import {
   addMarketDataFile,
   addMarketDataSource,
+  addDataContract,
   getS3PresignedUploadUrl,
 } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
@@ -46,7 +47,6 @@ import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Calendar } from './ui/calendar';
 import { Input } from './ui/input';
-import { addDataContract } from '@/lib/actions/actions-datacontract';
 
 const formSchema = z.object({
   marketDataSourceId: z.string().optional(),

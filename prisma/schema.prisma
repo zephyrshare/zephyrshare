@@ -11,7 +11,7 @@ datasource db {
 model User {
   id              String           @id @default(cuid())
   name            String?
-  username        String? // If you are using Github OAuth, you can get rid of the username attribute (that is for Twitter OAuth)
+  username        String?
   gh_username     String?
   email           String?          @unique
   emailVerified   DateTime?
@@ -19,19 +19,18 @@ model User {
   createdAt       DateTime?        @default(now())
   updatedAt       DateTime         @updatedAt
   role            String           @default("OWNER_ADMIN")
-  accounts        Account[] // User can have multiple Accounts (these are the OAuth accounts)
+  organizationId  String?
+  apiToken        String?          @unique
+  accounts        Account[]
   agreements      DataAgreement[]
   marketDataFiles MarketDataFile[]
   sessions        Session[]
   organization    Organization?    @relation(fields: [organizationId], references: [id])
-  organizationId  String? // The ID of the organization the user belongs to. Must be nullable since the user signs up before joining an organization.
-  apiToken        String?          @unique
 }
 
 model Account {
   id                       String  @id @default(cuid())
   userId                   String
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   type                     String
   provider                 String
   providerAccountId        String
@@ -45,6 +44,7 @@ model Account {
   session_state            String?
   oauth_token_secret       String?
   oauth_token              String?
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])
@@ -54,8 +54,8 @@ model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -72,37 +72,30 @@ model Organization {
   id                  String             @id @default(cuid())
   name                String
   description         String?
-  emailDomain         String?            @unique // The domain of the organization's email address
   logo                String?
   createdAt           DateTime?          @default(now())
   role                OrganizationRole   @default(SELLER)
-  users               User[]
+  emailDomain         String?            @unique
   agreements          DataAgreement[]
+  buyerDataContracts  DataContract[]     @relation("BuyerDataContracts")
+  sellerDataContracts DataContract[]     @relation("SellerDataContracts")
   marketDataFiles     MarketDataFile[]
   marketDataSources   MarketDataSource[]
-  sellerDataContracts DataContract[]     @relation("SellerDataContracts")
-  buyerDataContracts  DataContract[]     @relation("BuyerDataContracts")
-}
-
-enum OrganizationRole {
-  BUYER
-  SELLER
-  BUYER_SELLER
-  ZEPHYR
+  users               User[]
 }
 
 model DataAgreement {
   id             String         @id @default(cuid())
   name           String
   description    String?
-  file           String // URL file location (S3, Vercel blob, etc.)
-  contentType    String // Content Type of uploaded agreement (e.g. application/pdf, plain/text, etc.)
+  file           String
+  contentType    String
   createdAt      DateTime?      @default(now())
   updatedAt      DateTime       @updatedAt
-  uploader       User?          @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
   uploaderId     String?
-  organization   Organization?  @relation(fields: [organizationId], references: [id])
   organizationId String?
+  organization   Organization?  @relation(fields: [organizationId], references: [id])
+  uploader       User?          @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
   dataContracts  DataContract[]
 
   @@index([organizationId])
@@ -111,19 +104,19 @@ model DataAgreement {
 model DataContract {
   id                 String           @id @default(cuid())
   marketDataSourceId String
-  marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
   agreementId        String
-  contractAmount     Float
-  buyerOrgId         String // The ID of the buying organization
-  buyerOrganization  Organization     @relation("BuyerDataContracts", fields: [buyerOrgId], references: [id])
-  sellerOrgId        String // The ID of the selling organization
-  sellerOrganization Organization     @relation("SellerDataContracts", fields: [sellerOrgId], references: [id])
-  agreement          DataAgreement    @relation(fields: [agreementId], references: [id])
+  buyerOrgId         String
+  sellerOrgId        String
   startDate          DateTime?
   endDate            DateTime?
   allowDownload      Boolean          @default(false)
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
+  contractAmount     Float
+  agreement          DataAgreement    @relation(fields: [agreementId], references: [id])
+  buyerOrganization  Organization     @relation("BuyerDataContracts", fields: [buyerOrgId], references: [id])
+  marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
+  sellerOrganization Organization     @relation("SellerDataContracts", fields: [sellerOrgId], references: [id])
 }
 
 model MarketDataFile {
@@ -132,22 +125,28 @@ model MarketDataFile {
   file               String
   contentType        String
   uploaderId         String
-  uploader           User             @relation(fields: [uploaderId], references: [id])
   organizationId     String
-  organization       Organization     @relation(fields: [organizationId], references: [id])
   createdAt          DateTime?        @default(now())
   marketDataSourceId String
   marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
+  organization       Organization     @relation(fields: [organizationId], references: [id])
+  uploader           User             @relation(fields: [uploaderId], references: [id])
 }
 
-// Represents a collection of related data files that are uploaded by the user
 model MarketDataSource {
   id              String           @id @default(cuid())
   name            String
   description     String?
-  marketDataFiles MarketDataFile[]
   organizationId  String
-  organization    Organization     @relation(fields: [organizationId], references: [id])
   createdAt       DateTime?        @default(now())
   dataContracts   DataContract[]
+  marketDataFiles MarketDataFile[]
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+}
+
+enum OrganizationRole {
+  BUYER
+  SELLER
+  BUYER_SELLER
+  ZEPHYR
 }

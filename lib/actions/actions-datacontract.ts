@@ -29,3 +29,23 @@ export const addDataContract = async (
     },
   });
 };
+
+/**
+ * Get all data contracts by organization
+ */
+export const getDataContractsByOrganization = async () => {
+  const session = await getSession();
+  if (!session?.user.id) {
+    throw new Error('Not authenticated');
+  }
+
+  if (!session.user.organizationId) {
+    throw new Error('Not belongs to any orgination');
+  }
+
+  return prisma.dataContract.findMany({
+    where: {
+      sellerOrgId: session.user.organizationId,
+    },
+  });
+};

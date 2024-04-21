@@ -5,3 +5,4 @@ export * from './actions-marketdata';
 export * from './actions-organization';
 export * from './actions-user';
 export * from './actions-customer';
+export * from './actions-datacontract';

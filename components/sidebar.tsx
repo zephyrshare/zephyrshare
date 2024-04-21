@@ -50,9 +50,9 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         icon: <Newspaper width={18} />,
       },
       {
-        name: 'Settings',
-        href: `${baseUrlPath}/settings`,
-        isActive: segments.includes('settings'),
+        name: 'Organization Settings',
+        href: `${baseUrlPath}/organizationsettings`,
+        isActive: segments.includes('organizationsettings'),
         icon: <Settings width={18} />,
       },
     ];
@@ -108,7 +108,9 @@ export default function Sidebar({ children }: { children: ReactNode }) {
           </div>
         </div>
         <div>
-          <div className="my-2 py-2 border-t border-stone-200 dark:border-stone-700">{children}</div>
+          <div className="my-2 py-2 border-t border-stone-200 dark:border-stone-700">
+            {children}
+          </div>
         </div>
       </div>
     </>
