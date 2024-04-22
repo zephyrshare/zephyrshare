@@ -5,10 +5,14 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import DataTable, { DataTableProps } from '@/components/ui/data-table';
 
 const panelOpenWidthClasses = {
+  1: 'lg:w-1/12',
   2: 'lg:w-2/12',
+  3: 'lg:w-3/12',
   5: 'lg:w-5/12',
   7: 'lg:w-7/12',
+  9: 'lg:w-9/12',
   10: 'lg:w-10/12',
+  11: 'lg:w-11/12',
 };
 
 export default function DataTableWithDetailPanel<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
@@ -33,7 +37,7 @@ export default function DataTableWithDetailPanel<TData, TValue>({ columns, data 
           <div className="flex flex-col h-full bg-white">
             <div className="flex justify-between p-4">
               {panelOpenWidth === 5 ? (
-                <ArrowLeft onClick={() => setPanelOpenWidth(10)} />
+                <ArrowLeft onClick={() => setPanelOpenWidth(9)} />
               ) : (
                 <ArrowRight onClick={() => setPanelOpenWidth(5)} />
               )}

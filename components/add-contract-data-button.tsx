@@ -17,30 +17,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  addMarketDataFile,
-  addMarketDataSource,
-  addDataContract,
-  getS3PresignedUploadUrl,
-} from '@/lib/actions';
+import { addMarketDataFile, addMarketDataSource, addDataContract, getS3PresignedUploadUrl } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Switch } from './ui/switch';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { CalendarIcon } from 'lucide-react';
@@ -98,9 +78,7 @@ export default function AddContractDataButton({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     if (!user?.organizationId) {
-      toast.error(
-        'User not associated with an organization. Cannot create customer contract.'
-      );
+      toast.error('User not associated with an organization. Cannot create customer contract.');
       return;
     }
 
@@ -109,9 +87,7 @@ export default function AddContractDataButton({
 
     // Check if the file is chosen or market data source is chosen and prevent form submission if not
     if (!currentFile && !marketDataSourceId) {
-      toast.error(
-        'Please choose market data source or select a new market data file to upload.'
-      );
+      toast.error('Please choose market data source or select a new market data file to upload.');
       return;
     }
 
@@ -223,31 +199,23 @@ export default function AddContractDataButton({
           + Add Contract
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle>Add a new customer contract</DialogTitle>
           <DialogDescription>
-            Add a contract data source and upload a new file here. Click create
-            contract when you're done.
+            Add a contract data source and upload a new file here. Click create contract when you're done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-8">
             <FormField
               control={form.control}
               name="marketDataSourceId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Choose market data source</FormLabel>
+                  <FormLabel>1. Choose market data source</FormLabel>
                   <FormControl>
-                    <Select
-                      disabled={!!currentFile}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select disabled={!!currentFile} onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a market data source" />
                       </SelectTrigger>
@@ -256,31 +224,22 @@ export default function AddContractDataButton({
                           {marketDataSources.length ? (
                             marketDataSources.map((source) => (
                               <Fragment key={source.id}>
-                                <SelectItem value={source.id}>
-                                  {source.name}
-                                </SelectItem>
+                                <SelectItem value={source.id}>{source.name}</SelectItem>
                               </Fragment>
                             ))
                           ) : (
-                            <div className="text-center text-xs">
-                              No market data souce found
-                            </div>
+                            <div className="text-center text-xs">No market data souce found</div>
                           )}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
                   </FormControl>
-                  <FormDescription>
-                    Or drag a data file to create new
-                  </FormDescription>
+                  <FormDescription>Or drag a data file to create new</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <UploadDropzone
-              currentFile={currentFile}
-              setCurrentFile={setCurrentFile}
-            />
+            <UploadDropzone currentFile={currentFile} setCurrentFile={setCurrentFile} />
             <FormField
               control={form.control}
               name="allowDownload"
@@ -288,13 +247,8 @@ export default function AddContractDataButton({
                 <FormItem>
                   <FormControl>
                     <div className="flex items-center space-x-2">
-                      <Switch
-                        id="allow-download"
-                        onCheckedChange={field.onChange}
-                      />
-                      <FormLabel htmlFor="allow-download">
-                        Allow Download
-                      </FormLabel>
+                      <Switch id="allow-download" onCheckedChange={field.onChange} />
+                      <FormLabel htmlFor="allow-download">Allow Download</FormLabel>
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -307,12 +261,9 @@ export default function AddContractDataButton({
               name="customerId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Choose a customer</FormLabel>
+                  <FormLabel>2. Choose a customer</FormLabel>
                   <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select a customer" />
                       </SelectTrigger>
@@ -321,15 +272,11 @@ export default function AddContractDataButton({
                           {customers.length ? (
                             customers.map((customer) => (
                               <Fragment key={customer.id}>
-                                <SelectItem value={customer.id}>
-                                  {customer.name}
-                                </SelectItem>
+                                <SelectItem value={customer.id}>{customer.name}</SelectItem>
                               </Fragment>
                             ))
                           ) : (
-                            <div className="text-center text-xs">
-                              No customer found
-                            </div>
+                            <div className="text-center text-xs">No customer found</div>
                           )}
                         </SelectGroup>
                       </SelectContent>
@@ -340,107 +287,97 @@ export default function AddContractDataButton({
               )}
             />
 
-            <FormLabel>Data Agreement Options</FormLabel>
-            <div className="flex flex-row gap-2">
-              <FormField
-                control={form.control}
-                name="agreement.startDate"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>Start Date</FormLabel>
-                    <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={'outline'}
-                              className={cn(
-                                'w-full pl-3 text-left font-normal',
-                                !field.value && 'text-muted-foreground'
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, 'PPP')
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) => {
-                              return endDate ? date >= endDate : false;
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="agreement.endDate"
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormLabel>End Date</FormLabel>
-                    <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={'outline'}
-                              className={cn(
-                                'w-full pl-3 text-left font-normal',
-                                !field.value && 'text-muted-foreground'
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, 'PPP')
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            disabled={(date) => {
-                              return startDate ? date <= startDate : false;
-                            }}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <div>
+              <FormLabel>3. Choose agreement dates</FormLabel>
+              <div className="flex flex-row gap-2">
+                <FormField
+                  control={form.control}
+                  name="agreement.startDate"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Start Date</FormLabel>
+                      <FormControl>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={'outline'}
+                                className={cn(
+                                  'w-full pl-3 text-left font-normal',
+                                  !field.value && 'text-muted-foreground'
+                                )}
+                              >
+                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date) => {
+                                return endDate ? date >= endDate : false;
+                              }}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="agreement.endDate"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>End Date</FormLabel>
+                      <FormControl>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={'outline'}
+                                className={cn(
+                                  'w-full pl-3 text-left font-normal',
+                                  !field.value && 'text-muted-foreground'
+                                )}
+                              >
+                                {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date) => {
+                                return startDate ? date <= startDate : false;
+                              }}
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
             <FormField
               control={form.control}
               name="agreement.contractAmount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Enter monthly data license cost</FormLabel>
+                  <FormLabel>4. Enter monthly data license cost</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter amount"
-                      type="number"
-                      {...field}
-                    />
+                    <Input placeholder="Enter amount" type="number" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -448,14 +385,8 @@ export default function AddContractDataButton({
             />
 
             <div className="flex justify-center mt-6">
-              <Button
-                type="submit"
-                className="w-full lg:w-1/2"
-                disabled={form.formState.isSubmitting}
-              >
-                {form.formState.isSubmitting
-                  ? 'Creating...'
-                  : 'Create Contract'}
+              <Button type="submit" className="w-full lg:w-1/2" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? 'Creating...' : 'Create Contract'}
               </Button>
             </div>
           </form>

@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { useDropzone } from "react-dropzone";
-import { fileSizeFromBytes } from "@/lib/utils";
-import { toast } from "sonner";
+import { useMemo } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { fileSizeFromBytes } from '@/lib/utils';
+import { toast } from 'sonner';
 
 import {
   Upload as ArrowUpTrayIcon,
@@ -9,21 +9,21 @@ import {
   FileText as DocumentTextIcon,
   Presentation as PresentationChartBarIcon,
   Image as PhotoIcon,
-} from "lucide-react";
+} from 'lucide-react';
 
 function fileIcon(fileType: string) {
   switch (fileType) {
-    case "application/pdf":
+    case 'application/pdf':
       return <DocumentTextIcon className="h-6 w-6 mx-auto" />;
-    case "image/png":
-    case "image/jpeg":
-    case "image/gif":
-    case "image/jpg":
+    case 'image/png':
+    case 'image/jpeg':
+    case 'image/gif':
+    case 'image/jpg':
       return <PhotoIcon className="h-6 w-6 mx-auto" />;
-    case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-    case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
-    case "application/vnd.ms-powerpoint":
-    case "application/msword":
+    case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+    case 'application/vnd.ms-powerpoint':
+    case 'application/msword':
       return <PresentationChartBarIcon className="h-6 w-6 mx-auto" />;
     default:
       return <DocumentIcon className="h-6 w-6 mx-auto" />;
@@ -42,7 +42,7 @@ export default function UploadDropzone({
   const maxSize = 100;
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "application/pdf": [], // ".pdf"
+      'application/pdf': [], // ".pdf"
     },
     multiple: false,
     maxSize: maxSize * 1024 * 1024,
@@ -52,10 +52,10 @@ export default function UploadDropzone({
     onDropRejected: (fileRejections) => {
       const { errors } = fileRejections[0];
       let message;
-      if (errors[0].code === "file-too-large") {
+      if (errors[0].code === 'file-too-large') {
         message = `File size too big (max. ${maxSize} MB)`;
-      } else if (errors[0].code === "file-invalid-type") {
-        message = "File type not supported (.pdf only)";
+      } else if (errors[0].code === 'file-invalid-type') {
+        message = 'File type not supported (.pdf only)';
       } else {
         message = errors[0].message;
       }
@@ -63,10 +63,7 @@ export default function UploadDropzone({
     },
   });
 
-  const imageBlobUrl = useMemo(
-    () => (currentFile ? URL.createObjectURL(currentFile) : ""),
-    [currentFile],
-  );
+  const imageBlobUrl = useMemo(() => (currentFile ? URL.createObjectURL(currentFile) : ''), [currentFile]);
 
   return (
     <div className="col-span-full">
@@ -75,14 +72,14 @@ export default function UploadDropzone({
         className="relative cursor-pointer font-semibold text-foreground hover:text-gray-900 hover:bg-gray-100 hover:dark:text-gray-500 hover:dark:bg-gray-900 block group"
       >
         <input {...getInputProps()} name="file" className="sr-only" />
-        <div className="flex justify-center rounded-lg border border-dashed border-black/25 dark:border-white/25 px-6 py-10 min-h-[200px] md:min-w-full items-center">
+        <div className="flex justify-center rounded-lg border border-dashed border-black/25 dark:border-white/25 px-6 py-4 min-h-[100px] md:min-w-full items-center">
           {currentFile ? (
             <div
               className="absolute inset-0 opacity-10 pointer-events-none group-hover:opacity-5 transition-opacity"
               style={{
                 backgroundImage: `url(${imageBlobUrl})`,
-                backgroundPosition: "center",
-                backgroundSize: "cover",
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
               }}
             />
           ) : null}
@@ -94,21 +91,14 @@ export default function UploadDropzone({
                 <p className="text-gray-500">{fileSizeFromBytes(currentFile.size)}</p>
               </div>
             ) : (
-              <ArrowUpTrayIcon
-                className="mx-auto h-10 w-10 text-gray-500"
-                aria-hidden="true"
-              />
+              <ArrowUpTrayIcon className="mx-auto h-10 w-10 text-gray-500" aria-hidden="true" />
             )}
 
-            <div className="mt-4 flex text-sm leading-6 text-gray-500">
-              <span className="mx-auto">
-                {currentFile ? "" : "Choose file to upload or drag and drop"}
-              </span>
+            <div className="mt-2 flex text-sm leading-6 text-gray-500">
+              <span className="mx-auto">{currentFile ? '' : 'Choose file to upload or drag and drop'}</span>
             </div>
             <p className="text-xs leading-5 text-gray-500">
-              {currentFile
-                ? "Replace file?"
-                : `Only *.pdf & ${maxSize} MB limit`}
+              {currentFile ? 'Replace file?' : `Only *.pdf & ${maxSize} MB limit`}
             </p>
           </div>
         </div>

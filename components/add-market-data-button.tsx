@@ -22,9 +22,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
-
 const formSchema = z.object({
-  dataSourceName: z.string().min(1, 'Market Data Name is required.').max(50, 'Market Data Name must not exceed 50 characters.'),
+  dataSourceName: z
+    .string()
+    .min(1, 'Market Data Name is required.')
+    .max(50, 'Market Data Name must not exceed 50 characters.'),
   dataSourceDescription: z.string().max(400, 'Description must not exceed 400 characters.').optional(),
 });
 
@@ -46,7 +48,6 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
   }
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-
     if (!user?.organizationId) {
       toast.error('User not associated with an organization. Cannot add data source.');
       return;
@@ -65,7 +66,7 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
         name: dataSourceName,
         description: dataSourceDescription || null,
         organizationId,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
     } catch (error) {
       console.error('Error adding Market Data Source:', error);
@@ -129,18 +130,14 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
         uploaderId: user.id,
         organizationId,
         marketDataSourceId: marketDataSourceRes.id,
-        createdAt: new Date()
+        createdAt: new Date(),
       });
 
-
-
       toast.success('Market Data Record added successfully');
-
     } catch (error) {
       console.error('Error adding Market Data Record:', error);
       toast.error('Error adding Market Data Record');
     }
-
 
     setUploading(false);
     setOpen(false);
@@ -164,10 +161,12 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add a Market Data Source</DialogTitle>
-          <DialogDescription>Add a market data source and upload a new file here. Click add when you're done.</DialogDescription>
+          <DialogDescription>
+            Add a market data source and upload a new file here. Click add when you're done.
+          </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <FormField
               control={form.control}
               name="dataSourceName"
@@ -186,9 +185,9 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
               name="dataSourceDescription"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Description (optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Describe the Market Data (Optional)" {...field} />
+                    <Textarea placeholder="Describe the market data" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
