@@ -32,15 +32,15 @@ const formSchema = z.object({
   marketDataSourceId: z.string().optional(),
   customerId: z.string({ required_error: 'Customer is required' }),
   allowDownload: z.boolean().optional(),
-  agreement: z.object({
+  contractDetails: z.object({
     startDate: z.date({
-      required_error: 'Agreement start date is required',
+      required_error: 'Contract start date is required',
     }),
     endDate: z.date({
-      required_error: 'Agreement start date is required',
+      required_error: 'Contract start date is required',
     }),
     contractAmount: z.string({
-      required_error: 'Agreement monthly data liceense cost is required',
+      required_error: 'Contract monthly data liceense cost is required',
     }),
   }),
 });
@@ -67,12 +67,12 @@ export default function AddContractDataButton({
   });
 
   const startDate = useWatch({
-    name: 'agreement.startDate',
+    name: 'contractDetails.startDate',
     control: form.control,
   });
 
   const endDate = useWatch({
-    name: 'agreement.endDate',
+    name: 'contractDetails.endDate',
     control: form.control,
   });
 
@@ -82,7 +82,7 @@ export default function AddContractDataButton({
       return;
     }
 
-    const { customerId, allowDownload, agreement } = data;
+    const { customerId, allowDownload, contractDetails } = data;
     let marketDataSourceId = data.marketDataSourceId;
 
     // Check if the file is chosen or market data source is chosen and prevent form submission if not
@@ -167,11 +167,10 @@ export default function AddContractDataButton({
       await addDataContract({
         buyerOrgId: customerId,
         marketDataSourceId: marketDataSourceId!,
-        startDate: agreement.startDate,
-        endDate: agreement.endDate,
-        contractAmount: parseFloat(agreement.contractAmount),
+        startDate: contractDetails.startDate,
+        endDate: contractDetails.endDate,
+        contractAmount: parseFloat(contractDetails.contractAmount),
         allowDownload,
-        agreementId: '00d5887a-7109-477c-9c62-15df2827c814',
       });
       toast.success('Contract is created succesfully.');
       setOpen(false);
@@ -288,11 +287,11 @@ export default function AddContractDataButton({
             />
 
             <div>
-              <FormLabel>3. Choose agreement dates</FormLabel>
+              <FormLabel>3. Choose contract dates</FormLabel>
               <div className="flex flex-row gap-2">
                 <FormField
                   control={form.control}
-                  name="agreement.startDate"
+                  name="contractDetails.startDate"
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <FormLabel>Start Date</FormLabel>
@@ -331,7 +330,7 @@ export default function AddContractDataButton({
                 />
                 <FormField
                   control={form.control}
-                  name="agreement.endDate"
+                  name="contractDetails.endDate"
                   render={({ field }) => (
                     <FormItem className="flex-1">
                       <FormLabel>End Date</FormLabel>
@@ -372,7 +371,7 @@ export default function AddContractDataButton({
             </div>
             <FormField
               control={form.control}
-              name="agreement.contractAmount"
+              name="contractDetails.contractAmount"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>4. Enter monthly data license cost</FormLabel>

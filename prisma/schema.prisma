@@ -22,7 +22,6 @@ model User {
   organizationId  String?
   apiToken        String?          @unique
   accounts        Account[]
-  agreements      DataAgreement[]
   marketDataFiles MarketDataFile[]
   sessions        Session[]
   organization    Organization?    @relation(fields: [organizationId], references: [id])
@@ -76,7 +75,6 @@ model Organization {
   createdAt           DateTime?          @default(now())
   role                OrganizationRole   @default(SELLER)
   emailDomain         String?            @unique
-  agreements          DataAgreement[]
   buyerDataContracts  DataContract[]     @relation("BuyerDataContracts")
   sellerDataContracts DataContract[]     @relation("SellerDataContracts")
   marketDataFiles     MarketDataFile[]
@@ -84,27 +82,9 @@ model Organization {
   users               User[]
 }
 
-model DataAgreement {
-  id             String         @id @default(cuid())
-  name           String
-  description    String?
-  file           String
-  contentType    String
-  createdAt      DateTime?      @default(now())
-  updatedAt      DateTime       @updatedAt
-  uploaderId     String?
-  organizationId String?
-  organization   Organization?  @relation(fields: [organizationId], references: [id])
-  uploader       User?          @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
-  dataContracts  DataContract[]
-
-  @@index([organizationId])
-}
-
 model DataContract {
   id                 String           @id @default(cuid())
   marketDataSourceId String
-  agreementId        String
   buyerOrgId         String
   sellerOrgId        String
   startDate          DateTime?
@@ -113,7 +93,6 @@ model DataContract {
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   contractAmount     Float
-  agreement          DataAgreement    @relation(fields: [agreementId], references: [id])
   buyerOrganization  Organization     @relation("BuyerDataContracts", fields: [buyerOrgId], references: [id])
   marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
   sellerOrganization Organization     @relation("SellerDataContracts", fields: [sellerOrgId], references: [id])

@@ -3,14 +3,7 @@
 // TODO - consider the problem of possibly exposing all UserRoles to all users by importing getBaseUrlPath from '@/lib/user-roles-privileges'?
 
 import Link from 'next/link';
-import {
-  Globe,
-  LayoutDashboard,
-  Menu,
-  Newspaper,
-  Settings,
-  HeartHandshake,
-} from 'lucide-react';
+import { Globe, LayoutDashboard, Menu, Newspaper, Settings, HeartHandshake } from 'lucide-react';
 import { usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
@@ -42,12 +35,6 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         href: `${baseUrlPath}/customers`,
         isActive: segments.includes('customers'),
         icon: <Globe width={18} />,
-      },
-      {
-        name: 'Agreements',
-        href: `${baseUrlPath}/agreements`,
-        isActive: segments.includes('agreements'),
-        icon: <Newspaper width={18} />,
       },
       {
         name: 'Organization Settings',
@@ -108,9 +95,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
           </div>
         </div>
         <div>
-          <div className="my-2 py-2 border-t border-stone-200 dark:border-stone-700">
-            {children}
-          </div>
+          <div className="my-2 py-2 border-t border-stone-200 dark:border-stone-700">{children}</div>
         </div>
       </div>
     </>
