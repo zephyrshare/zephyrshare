@@ -9,7 +9,7 @@ import { deleteMarketDataSourceAndDataFiles } from '@/lib/actions';
 export const marketDataSourceTableColumns: ColumnDef<MarketDataSource>[] = [
   {
     accessorKey: 'name',
-    header: 'Market Data Name',
+    header: 'Market Data',
   },
   {
     accessorKey: 'description',

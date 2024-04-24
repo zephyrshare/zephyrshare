@@ -25,8 +25,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 const formSchema = z.object({
   dataSourceName: z
     .string()
-    .min(1, 'Market Data Name is required.')
-    .max(50, 'Market Data Name must not exceed 50 characters.'),
+    .min(1, 'Market Data name is required.')
+    .max(50, 'Market Data name must not exceed 50 characters.'),
   dataSourceDescription: z.string().max(400, 'Description must not exceed 400 characters.').optional(),
 });
 
@@ -172,9 +172,9 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
               name="dataSourceName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Market Data Name</FormLabel>
+                  <FormLabel>Market Data name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Market Data Name" {...field} />
+                    <Input placeholder="Ex, End of Day Settlement Prices" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

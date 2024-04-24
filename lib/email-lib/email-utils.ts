@@ -26,12 +26,12 @@ export const sendEmail = async ({
   // https://github.com/resend/resend-examples/blob/main/with-prevent-thread-on-gmail/src/pages/api/send.ts
   return resend.emails.send({
     from: marketing
-      ? 'Andrew from Zephyr Share <andrew@zephyrshare.com>'
+      ? 'ZephyrShare <no-reply@zephyrshare.com>'
       : system
-      ? 'Zephyr Share <support@zephyrshare.com>'
-      : 'Andrew from Zephyr Share <andrew@zephyrshare.com>',
+      ? 'ZephyrShare <no-reply@zephyrshare.com>'
+      : 'ZephyrShare <no-reply@zephyrshare.com>',
     to: test ? 'delivered@resend.dev' : to,
-    reply_to: marketing ? 'andrew@zephyrshare.com' : undefined,
+    reply_to: marketing ? 'no-reply@zephyrshare.com' : undefined,
     subject,
     react,
     headers: {
