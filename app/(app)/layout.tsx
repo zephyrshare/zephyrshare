@@ -6,7 +6,9 @@ import TopNavbar from '@/components/top-navbar';
 export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="relative">
-      <TopNavbar />
+      <Suspense fallback={<></>}>
+        <TopNavbar />
+      </Suspense>
       <Sidebar>
         <Suspense fallback={<div>Loading...</div>}>
           <SidebarProfile />

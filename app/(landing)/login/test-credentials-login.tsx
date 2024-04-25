@@ -1,11 +1,12 @@
 'use client';
 
 import LoadingDots from '@/components/ui/loading-dots';
-import { signIn } from 'next-auth/react';
+import { signIn, SignInResponse } from 'next-auth/react';
 import { useSearchParams, useParams, useRouter } from 'next/navigation';
 import { useState, useEffect, FormEvent } from 'react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
+import { minimumDelay } from '@/lib/utils';
 
 export default function TestCredentialsLogin() {
   const router = useRouter();
@@ -36,12 +37,15 @@ export default function TestCredentialsLogin() {
 
     setLoading(true);
 
-    // https://next-auth.js.org/getting-started/client#using-the-redirect-false-option
-    const res = await signIn('credentials', {
-      username,
-      password,
-      redirect: false,
-    });
+    let res: SignInResponse | undefined;
+    await minimumDelay(async () => {
+      // https://next-auth.js.org/getting-started/client#using-the-redirect-false-option
+      res = await signIn('credentials', {
+        username,
+        password,
+        redirect: false,
+      });
+    }, 200);
 
     if (res?.ok && !res?.error) {
       router.push('/marketdata');
@@ -101,6 +105,9 @@ export default function TestCredentialsLogin() {
             </>
           )}
         </button>
+        <p className="text-stone-400 dark:text-stone-300 text-left text-xs font-normal">
+          Credentials authentication is not supported in production
+        </p>
       </form>
     </>
   );
