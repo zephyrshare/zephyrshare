@@ -6,13 +6,6 @@ import { sendVerificationRequestEmail } from './email-lib/send-verification-requ
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { User } from '@prisma/client';
-import { getEmailDomain, getEmailUsername } from '@/lib/utils';
-import {
-  createOrganization,
-  updateUserOnLogin,
-  getOrganizationByEmailDomain,
-} from '@/lib/actions/dataowner-serveractions';
-import { DEFAULT_ORG_NAME } from '@/lib/constants';
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 
@@ -69,6 +62,7 @@ export const authOptions: NextAuthOptions = {
             username: 'zonalexchange',
             email: 'test@zexchange.com',
             role: 'OWNER_ADMIN',
+            dataOwnerId: 'new_dataowner_id',
           };
         }
 
@@ -79,6 +73,7 @@ export const authOptions: NextAuthOptions = {
             username: 'drwtrader',
             email: 'trader@drwholdings.com',
             role: 'CUSTOMER_ADMIN',
+            dataCustomerId: 'new_datacustomer_id',
           };
         }
 
@@ -134,8 +129,6 @@ export const authOptions: NextAuthOptions = {
         // @ts-expect-error
         role: token?.user?.role, // Include the user's role in the session
         // @ts-expect-error
-        organizationId: token?.user?.organizationId,
-        // @ts-expect-error
         apiToken: token?.user?.apiToken,
         // @ts-expect-error
         dataOwnerId: token?.user?.dataOwnerId,
@@ -154,64 +147,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   events: {
-    signIn: async ({ user }) => {
-      // When a user signs up
-      // 1. If the user has no organizationId, check whether an organization exists for the user's email domain
-      //      If one exists, save the organizationId to the user
-      //      If none exists, create a new organization and save the organizationId to the user
-      // 2. Add their "name" default to their email without the @domain
-      // 3. Assign the user a role
-
-      if (user?.name === 'Zonal Exchange') {
-        return;
-      }
-
-      const updatedUserFields: any = {};
-
-      console.log('User in signIn callback', user);
-
-      // Check whether an organization exists with the given email domain
-      //@ts-expect-error
-      if (!user.organizationId) {
-        const emailDomain = getEmailDomain(user?.email);
-
-        console.log('Email domain', emailDomain);
-        const organization = await getOrganizationByEmailDomain(emailDomain);
-
-        console.log('Organization', organization);
-
-        if (organization) {
-          // Add the organizationId of the existing Organization to the user
-          updatedUserFields.organizationId = organization.id;
-        } else {
-          // TODO - add a "business" or "personal" email option. If personal, don't create an organization (or just create a personal one)
-          // TODO - validate no business organizations use personal email domains such as @gmail.com, @yahoo.com, @hotmail.com, @icloud.com, @outlook.com, @aol.com, @me.com
-
-          const organization = await createOrganization({
-            name: DEFAULT_ORG_NAME,
-            emailDomain,
-          });
-          console.log('Created organization', organization);
-
-          // Add the organizationId of the newly created Organization to the user
-          // @ts-expect-error
-          updatedUserFields.organizationId = organization.id;
-        }
-      }
-
-      // Update the user here in the code:
-      // 1. User's name to be their email without the domain
-      // 2. organizationId to be the user's organization
-      if (!user.name) {
-        updatedUserFields.name = getEmailUsername(user.email);
-      }
-
-      // if updatedUserFields is not empty, update the user
-      if (Object.keys(updatedUserFields).length > 0) {
-        const updatedUser = await updateUserOnLogin(updatedUserFields, user.id);
-        console.log('Updated user in signIn callback', updatedUser);
-      }
-    },
+    signIn: async ({ user }) => {},
   },
 };
 

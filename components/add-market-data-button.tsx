@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { addMarketDataFile, addMarketDataSource, getS3PresignedUploadUrl } from '@/lib/actions/dataowner-serveractions';
+import { addMarketDataFile, addMarketDataSource, getS3PresignedUploadUrl } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -48,15 +48,15 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
   }
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    if (!user?.organizationId) {
-      toast.error('User not associated with an organization. Cannot add data source.');
+    if (!user?.dataOwnerId) {
+      toast.error('User not associated with a Data Owner. Cannot add data source.');
       return;
     }
 
     setUploading(true);
 
     const { dataSourceName, dataSourceDescription } = data;
-    const organizationId = user?.organizationId;
+    const dataOwnerId = user?.dataOwnerId;
     let marketDataSourceRes;
 
     try {
@@ -65,7 +65,7 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
         id: uuid(),
         name: dataSourceName,
         description: dataSourceDescription || null,
-        organizationId,
+        dataOwnerId,
         createdAt: new Date(),
       });
     } catch (error) {
@@ -91,7 +91,7 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
     // type: "application/pdf"
 
     const fileId = uuid();
-    const s3Key = `${organizationId}/${fileId}`;
+    const s3Key = `${dataOwnerId}/${fileId}`;
 
     console.log('user', user);
     console.log('fileId', fileId);
@@ -128,15 +128,14 @@ export default function AddMarketDataButton({ user }: { user: User | undefined }
         file: s3Key,
         contentType: currentFile.type,
         uploaderId: user.id,
-        organizationId,
         marketDataSourceId: marketDataSourceRes.id,
         createdAt: new Date(),
       });
 
-      toast.success('Market Data Record added successfully');
+      toast.success('Market Data added successfully');
     } catch (error) {
-      console.error('Error adding Market Data Record:', error);
-      toast.error('Error adding Market Data Record');
+      console.error('Error adding Market Data:', error);
+      toast.error('Error adding Market Data');
     }
 
     setUploading(false);

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 
 export const dataContractTableColumns: ColumnDef<DataContract>[] = [
   {
-    accessorKey: 'buyerOrgId',
+    accessorKey: 'dataCustomerId',
     header: 'Data Contract Name',
   },
   {

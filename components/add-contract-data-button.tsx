@@ -154,10 +154,10 @@ export default function AddContractDataButton({
           createdAt: new Date(),
         });
 
-        toast.success('Market Data Record added successfully');
+        toast.success('Market Data added successfully');
       } catch (error) {
-        console.error('Error adding Market Data Record:', error);
-        toast.error('Error adding Market Data Record');
+        console.error('Error adding Market Data:', error);
+        toast.error('Error adding Market Data');
         return;
       }
     }

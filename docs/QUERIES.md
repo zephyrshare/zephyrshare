@@ -20,9 +20,7 @@ INSERT INTO "User" (
   NOW(),
   NOW()
 );
-```
 
-```
 INSERT INTO "User" (
   id,
   name,
@@ -40,43 +38,61 @@ INSERT INTO "User" (
   NOW(),
   NOW()
 );
-```
 
-```
+-- Add a DataOwner for zonalexchange
+INSERT INTO "DataOwner" (
+  id,
+  name,
+  description,
+  logo,
+  "createdAt",
+  "emailDomain"
+) VALUES (
+  'new_dataowner_id', -- Provide a unique id
+  'Zonal Exchange',
+  'A leading provider of financial market data',
+  'logo_url', -- Replace with actual logo URL if available
+  NOW(),
+  'zexchange.com'
+);
+
+-- Associate zonalexchange with this DataOwner
 UPDATE "User"
-SET "role" = 'ZEPHYR_ADMIN'
-WHERE "id" = 'cls0x2q3p0000ligvucr2fzmc';
-```
+SET "dataOwnerId" = 'new_dataowner_id'
+WHERE username = 'zonalexchange';
 
-```
+-- Add a DataCustomer for drwtrader
+INSERT INTO "DataCustomer" (
+  id,
+  name,
+  description,
+  logo,
+  "createdAt",
+  "emailDomain"
+) VALUES (
+  'new_datacustomer_id', -- Provide a unique id
+  'DRW Holdings',
+  'High-profile trading firm using diverse trading strategies',
+  'logo_url', -- Replace with actual logo URL if available
+  NOW(),
+  'drwholdings.com'
+);
+
+-- Associate drwtrader with this DataCustomer
 UPDATE "User"
-SET "role" = 'OWNER_ADMIN'
-WHERE "id" = 'clsp3iya60000gymxtb36k0ud';
-```
+SET "dataCustomerId" = 'new_datacustomer_id'
+WHERE username = 'drwtrader';
 
-Add an organizationId
-
-```
-UPDATE "User"
-SET "role" = 'OWNER_ADMIN'
-WHERE "id" = 'clsp3iya60000gymxtb36k0ud';
-```
-
-Delete all users from User table where role is null
-
-```
-DELETE FROM "User"
-WHERE "role" IS NULL;
-```
-
-## Organization Queries
-
-```
-SELECT * FROM "Organization";
-```
-
-Delete every organizations from Organization table
-
-```
-DELETE FROM "Organization";
+-- Create a CustomerRelationship between the DataOwner and DataCustomer
+INSERT INTO "CustomerRelationship" (
+  id,
+  "dataCustomerId",
+  "dataOwnerId",
+  "createdAt"
+) VALUES (
+  'new_relationship_id', -- Provide a unique id
+  'new_datacustomer_id',
+  'new_dataowner_id',
+  NOW()
+);
 ```

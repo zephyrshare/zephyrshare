@@ -6,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { updateUser } from '@/lib/actions/dataowner-serveractions';
+import { updateUser } from '@/lib/actions';
 import { generateApiToken } from '@/lib/api-token';
 
 interface APITokenFormProps {

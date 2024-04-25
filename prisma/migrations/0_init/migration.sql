@@ -93,8 +93,6 @@ CREATE TABLE "CustomerRelationship" (
 -- CreateTable
 CREATE TABLE "DataContract" (
     "id" TEXT NOT NULL,
-    "buyerOrgId" TEXT NOT NULL,
-    "sellerOrgId" TEXT NOT NULL,
     "startDate" TIMESTAMP(3),
     "endDate" TIMESTAMP(3),
     "allowDownload" BOOLEAN NOT NULL DEFAULT false,

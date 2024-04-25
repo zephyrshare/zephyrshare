@@ -47,8 +47,8 @@ export default function Sidebar({ children }: { children: ReactNode }) {
     // Keep the organization settings tab at the end
     tabLinks.push({
       name: 'Organization Settings',
-      href: `${baseUrlPath}/organizationsettings`,
-      isActive: segments.includes('organizationsettings'),
+      href: `${baseUrlPath}/orgsettings`,
+      isActive: segments.includes('orgsettings'),
       icon: <Settings width={18} />,
     });
 

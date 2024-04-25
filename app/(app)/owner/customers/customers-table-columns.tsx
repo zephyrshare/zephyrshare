@@ -11,10 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { deleteOrganization } from '@/lib/actions/dataowner-serveractions';
-import { Organization } from '@prisma/client';
+import { deleteDataCustomer } from '@/lib/actions';
 
-export const customersTableColumns: ColumnDef<Organization>[] = [
+export const customersTableColumns: ColumnDef<any>[] = [
   {
     accessorKey: 'name',
     header: 'Organization Name',
@@ -37,7 +36,7 @@ export const customersTableColumns: ColumnDef<Organization>[] = [
       const customer = row.original;
 
       function handleDelete() {
-        deleteOrganization(customer.id);
+        deleteDataCustomer(customer.id);
       }
 
       return (

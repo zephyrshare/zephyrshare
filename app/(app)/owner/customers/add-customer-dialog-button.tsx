@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { createOrganization } from '@/lib/actions/dataowner-serveractions';
+import { addDataCustomer } from '@/lib/actions';
 import { minimumDelay } from '@/lib/utils';
 
 const formSchema = z.object({
@@ -40,7 +40,7 @@ export default function AddCustomerButton() {
 
     await minimumDelay(async () => {
       try {
-        await createOrganization(values);
+        await addDataCustomer(values); // Updated to use addDataCustomer
         form.reset(); // This will reset the form fields to their initial state
       } catch (error) {
         console.error('Error submitting form', error);
@@ -54,7 +54,7 @@ export default function AddCustomerButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="default" size="default" className="max-w-[250px]">
-          + Customer Organization
+          + Add Customer
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">

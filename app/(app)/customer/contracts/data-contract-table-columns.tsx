@@ -5,7 +5,7 @@ import { DataContract } from '@prisma/client';
 
 export const dataContractTableColumns: ColumnDef<DataContract>[] = [
   {
-    accessorKey: 'buyerOrgId',
+    accessorKey: 'dataCustomerId',
     header: 'Data Contract Name',
   },
   {
