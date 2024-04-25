@@ -19,7 +19,6 @@ model User {
   createdAt       DateTime?        @default(now())
   updatedAt       DateTime         @updatedAt
   role            String           @default("OWNER_ADMIN")
-  organizationId  String?
   apiToken        String?          @unique
   hasOnboarded    Boolean          @default(false)
   accounts        Account[]
@@ -130,7 +129,6 @@ model MarketDataFile {
   file               String
   contentType        String
   uploaderId         String
-  organizationId     String
   createdAt          DateTime?        @default(now())
   marketDataSourceId String
   marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
@@ -141,7 +139,6 @@ model MarketDataSource {
   id              String           @id @default(cuid())
   name            String
   description     String?
-  organizationId  String
   createdAt       DateTime?        @default(now())
   dataContracts   DataContract[]
   marketDataFiles MarketDataFile[]

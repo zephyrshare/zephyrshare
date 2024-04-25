@@ -132,6 +132,12 @@ npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma 
 npx prisma migrate resolve --applied 0_init
 ```
 
+7. Push the changes to the remote database
+
+```
+npx prisma db push
+```
+
 The command will mark 0_init as applied by adding it to the \_prisma_migrations table.
 
 ## Reset Prisma Schema Migrations after a particular migration
