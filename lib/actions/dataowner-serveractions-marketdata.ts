@@ -13,7 +13,6 @@ export async function getMarketDataSources(): Promise<MarketDataSource[]> {
   }
 
   noStore(); // Prevent caching of this page
-  console.log('Fetching Market Data Sources for Data Owner:', session.user.dataOwnerId);
 
   try {
     const marketDataSources = await prisma.marketDataSource.findMany({

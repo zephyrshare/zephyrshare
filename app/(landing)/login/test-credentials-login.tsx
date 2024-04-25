@@ -106,7 +106,7 @@ export default function TestCredentialsLogin() {
           )}
         </button>
         <p className="text-stone-400 dark:text-stone-300 text-left text-xs font-normal">
-          Credentials authentication is not supported in production
+          Credential authentication is <b>not supported</b> in production
         </p>
       </form>
     </>

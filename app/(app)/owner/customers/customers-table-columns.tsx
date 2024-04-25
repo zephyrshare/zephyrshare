@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,12 +17,12 @@ export const customersTableColumns: ColumnDef<any>[] = [
     accessorKey: 'name',
     header: 'Organization Name',
     cell: ({ row }) => {
-      const customer = row.original;
-      return (
-        <Link href={`customers/${customer.id}`}>
-          <div>{customer.name}</div>
-        </Link>
-      );
+      // const customer = row.original;
+      // return (
+      //   <Link href={`customers/${customer.id}`}>
+      //     <div>{customer.name}</div>
+      //   </Link>
+      // );
     },
   },
   {

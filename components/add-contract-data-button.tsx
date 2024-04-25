@@ -197,7 +197,8 @@ export default function AddContractDataButton({
           + Add Contract
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent className="sm:max-w-[625px] overflow-y-auto">
+        {/* <DialogContent className="max-h-[95vh] overflow-y-auto sm:max-h-[625px]"> */}
         <DialogHeader>
           <DialogTitle>Add a new customer contract</DialogTitle>
           <DialogDescription>

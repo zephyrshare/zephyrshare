@@ -13,7 +13,6 @@ export const getDataCustomers = async (params?: { query?: string }) => {
   const query = params?.query;
   const session = await getSession();
 
-  console.log('session in getDataCustomers', session);
   if (!session?.user.dataOwnerId) {
     throw new Error('Not associated with any data owner');
   }
