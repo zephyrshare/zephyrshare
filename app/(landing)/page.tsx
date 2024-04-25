@@ -8,7 +8,7 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-center">ZephyrShare</h1>
           <WindIcon className="ml-1" size={34} />
         </div>
-        <p className="text-lg text-center mt-8">AI-powered data licensing platform for</p>
+        <p className="text-lg text-center mt-16">AI-powered data licensing platform for</p>
         <p className="text-lg text-center mt-1">commodity derivatives market data files</p>
       </div>
     </main>

@@ -3,7 +3,7 @@ import SidebarProfile from '@/components/sidebar-profile';
 import Sidebar from '@/components/sidebar';
 import TopNavbar from '@/components/top-navbar';
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="relative">
       <TopNavbar />

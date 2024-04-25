@@ -69,6 +69,7 @@ export default function TestCredentialsLogin() {
             setUsername(e.target.value);
             setUsernameError(false);
           }}
+          disabled={loading}
         />
         <Input
           className={`border-2 w-full text-left ${passwordError ? 'border-red-500' : 'border-stone-200'}`}
@@ -80,6 +81,7 @@ export default function TestCredentialsLogin() {
             setPassword(e.target.value);
             setPasswordError(false);
           }}
+          disabled={loading}
         />
         <button
           type="submit"
