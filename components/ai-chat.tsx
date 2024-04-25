@@ -24,7 +24,7 @@ const promptIdeas = [
 ];
 
 const promptContext = `
-Here are the most recent updates for Zephyr Share. Please answer the prompted questions based on the following data. Don't make up data, just use the data available here. Your tone should be confident, speak as if you are the Zephyr Share AI.:
+Here are the most recent updates for the user. Please answer the prompted questions based on the following data. Don't make up data, just use the data available here. Your tone should be confident, speak as if you are the ZephyrAI.:
 - Today's update is there are no new cusomters.
 - We have 3 contracts in progress and 2 contracts expiring in the next 30 days.
 - The most recent agreement is a 3-year contract with a new customer.
@@ -97,7 +97,7 @@ export default function AIChat() {
             ref={textareaRef}
             className="py-4 px-4 mb-2 min-h-0 border border-gray-300 rounded-lg shadow-sm text-sm font-light tracking-normal resize-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:ring-opacity-0"
             value={input}
-            placeholder="Ask Zephyr Share..."
+            placeholder="Ask ZephyrAI..."
             onChange={handleInputChange}
             // when the user presses enter, the form will submit. HOWEVER, if the user presses shift+enter, the form will not submit.
             onKeyDown={(e) => {
@@ -153,7 +153,7 @@ export default function AIChat() {
             )}
           </div>
           <div className="flex flex-col">
-            <h4 className="text-sm font-bold">{m.role === 'user' ? 'You' : 'Zephyr Share'}</h4>
+            <h4 className="text-sm font-bold">{m.role === 'user' ? 'You' : 'ZephyrAI'}</h4>
             <div className="whitespace-pre-wrap text-sm">{m.content.split('\n\n\n')[0]}</div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { getServerSession, type NextAuthOptions } from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 import EmailProvider from 'next-auth/providers/email';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import { sendVerificationRequestEmail } from './email-lib/send-verification-request-email';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
@@ -30,6 +31,9 @@ export const authOptions: NextAuthOptions = {
     EmailProvider({
       // TODO: how to set the default role for email signups?
       async sendVerificationRequest({ identifier, url }) {
+        // identifier: the email address the verification request was sent to
+        // url: the url to verify the users email
+
         if (process.env.NODE_ENV === 'development') {
           console.log(`Login link: ${url}`);
           return;
@@ -38,6 +42,32 @@ export const authOptions: NextAuthOptions = {
             url,
             email: identifier,
           });
+        }
+      },
+    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials, req) {
+        // Here you would fetch user data from your database
+        // And compare the password with the hashed password stored in the database
+
+        console.log('CredentialsProvider', credentials);
+
+        if (credentials?.username === 'zonalexchange' && credentials?.password === 'zonalpass') {
+          console.log('correct credentialas - returning user');
+          // Return a sample user here based on the code and the schema.prisma
+          return {
+            id: 'aoiefjoiwef',
+            name: 'Zonal Exchange',
+            username: 'zonalexchange',
+            email: 'test@zexchange.com',
+          };
+        } else {
+          return null;
         }
       },
     }),
@@ -112,13 +142,23 @@ export const authOptions: NextAuthOptions = {
       // 2. Add their "name" default to their email without the @domain
       // 3. Assign the user a role
 
+      if (user?.name === 'Zonal Exchange') {
+        return;
+      }
+
       const updatedUserFields: any = {};
+
+      console.log('User in signIn callback', user);
 
       // Check whether an organization exists with the given email domain
       //@ts-expect-error
       if (!user.organizationId) {
         const emailDomain = getEmailDomain(user?.email);
+
+        console.log('Email domain', emailDomain);
         const organization = await getOrganizationByEmailDomain(emailDomain);
+
+        console.log('Organization', organization);
 
         if (organization) {
           // Add the organizationId of the existing Organization to the user

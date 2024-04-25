@@ -4,13 +4,12 @@ import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Prisma } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 /**
  * Create new data contract
  */
-export const addDataContract = async (
-  data: Omit<Prisma.DataContractUncheckedCreateInput, 'sellerOrgId'>
-) => {
+export const addDataContract = async (data: Omit<Prisma.DataContractUncheckedCreateInput, 'sellerOrgId'>) => {
   const session = await getSession();
   if (!session?.user.id) {
     throw new Error('Not authenticated');
@@ -28,6 +27,9 @@ export const addDataContract = async (
       sellerOrgId: session.user.organizationId,
     },
   });
+
+  // Revalidate the market data page to reflect the new data source
+  revalidatePath('/marketdata');
 };
 
 /**

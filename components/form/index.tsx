@@ -1,6 +1,6 @@
 'use client';
 
-import LoadingDots from '@/components/icons/loading-dots';
+import LoadingDots from '@/components/ui/loading-dots';
 import { cn } from '@/lib/utils';
 import { useSession } from 'next-auth/react';
 import { useParams, useRouter } from 'next/navigation';
@@ -35,7 +35,7 @@ export default function Form({
   return (
     <form
       action={async (data: FormData) => {
-        const obj = Object.fromEntries(data.entries())
+        const obj = Object.fromEntries(data.entries());
         handleSubmit(obj).then(async (res: any) => {
           if (res.error) {
             toast.error(res.error);

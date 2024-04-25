@@ -1,13 +1,13 @@
 'use client';
 
-import LoadingDots from '@/components/icons/loading-dots';
+import LoadingDots from '@/components/ui/loading-dots';
 import { signIn } from 'next-auth/react';
 import { useSearchParams, useParams } from 'next/navigation';
 import { useState, useEffect, FormEvent } from 'react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 
-export default function EmailLoginButton() {
+export default function EmailLogin() {
   const { next } = useParams as { next?: string };
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState<string>('');
@@ -23,7 +23,7 @@ export default function EmailLoginButton() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault(); // Prevent form from submitting traditionally
     setLoading(true);
-    
+
     signIn('email', {
       email: email,
       redirect: false,
@@ -41,10 +41,10 @@ export default function EmailLoginButton() {
 
   return (
     <>
-      <form className="flex flex-col pt-8" onSubmit={handleSubmit}>
+      <form className="flex flex-col pt-2" onSubmit={handleSubmit} noValidate>
         <Input
           className="border-2 w-full text-center"
-          placeholder="jsmith@company.co"
+          placeholder="email@company.com"
           type="email" // Ensure proper keyboard on mobile devices
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -62,7 +62,7 @@ export default function EmailLoginButton() {
             <LoadingDots color="#A8A29E" />
           ) : (
             <>
-              <p className="text-sm font-medium text-stone-600 dark:text-stone-400">Login with Email</p>
+              <p className="text-sm font-medium text-stone-600 dark:text-stone-400">Continue with Email</p>
             </>
           )}
         </button>

@@ -27,7 +27,7 @@ export default async function middleware(req: NextRequest) {
    */
   if (!session) {
     // Allow unauthenticated user to access "/"
-    if (path === '/' || path === '/about' || path === '/login' || path === 'example') {
+    if (path === '/' || path === '/about' || path === '/login') {
       return NextResponse.next();
     }
   }

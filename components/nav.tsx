@@ -26,11 +26,6 @@ export default function Navbar() {
                     About
                   </div>
                 </Link>
-                <Link href="/example">
-                  <div className="text-gray-600 hover:text-gray-400 px-3 py-2 rounded-md text-sm font-medium">
-                    Example
-                  </div>
-                </Link>
                 <Link href="/login">
                   <div className="text-gray-600 hover:text-gray-400 hover:shadow-md px-3 py-2 rounded-lg text-sm font-medium border border-slate-500 transition duration-50">
                     Login
@@ -51,11 +46,6 @@ export default function Navbar() {
           <Link href="/about">
             <div className="text-gray-600 hover:text-gray-400 block px-3 py-2 rounded-md text-base font-medium">
               About
-            </div>
-          </Link>
-          <Link href="/example">
-            <div className="text-gray-600 hover:text-gray-400 block px-3 py-2 rounded-md text-base font-medium">
-              Example
             </div>
           </Link>
           <Link href="/login">

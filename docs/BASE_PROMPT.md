@@ -1,3 +1,7 @@
+# Your Task
+
+[Task for the LLM here]
+
 # Development Guidelines for Our Next.js 14 React Application
 
 As we embark on developing this web application, it's crucial to adhere to our selected technology stack and coding practices. Please try to follow a code style and structure that is consistent with the existing project. Unless otherwise specified, please ensure the integration of the following technologies:
@@ -14,15 +18,19 @@ As we embark on developing this web application, it's crucial to adhere to our s
 ## Important Reminders
 
 ### Code Comments
+
 - Clear, concise, and meaningful code comments are a critical piece of well functioning code. If comments exist with a provided file input, you may make them clearer if you choose but please do NOT remove them unless explicitly asked to remove them in the prompt.
 
 ### External NPM packages
+
 - Please try to not add new npm packages unless I specifically ask to add new npm packages elsewhere in the prompt. Please find a solution that prefers the existing set of components and features.
 
 ### React components
+
 - For functional component declarations where the component is the default export, prefer the syntax "export default function myFunction() {"
 
 ### UI Component Library
+
 - Please prefer using component from the shadcn/ui component library (https://ui.shadcn.com/) unless specified in the prompt (of course, if shadcn/ui does not have the component, look to find the most popular and well documented component to meet the needs of the feature being built. You may evaluate this by number of GitHub stars, age of the most recently merged pull request, age of the most recent project commit, number of contributors, among other methods)
 
 ### Next.js Component Types
