@@ -78,7 +78,7 @@ export default function AddContractDataButton({
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     if (!user?.dataOwnerId) {
-      toast.error('User not associated with an organization. Cannot create customer contract.');
+      toast.error('User not associated with a Data Owner. Cannot create customer contract.');
       return;
     }
 
@@ -150,7 +150,6 @@ export default function AddContractDataButton({
           file: s3Key,
           contentType: currentFile.type,
           uploaderId: user.id,
-          dataOwnerId,
           marketDataSourceId,
           createdAt: new Date(),
         });

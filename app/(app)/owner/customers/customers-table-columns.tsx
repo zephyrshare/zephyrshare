@@ -51,9 +51,6 @@ export const customersTableColumns: ColumnDef<Organization>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuItem>Add Member</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => {}}>
-              <Link href={`customers/${customer.id}`}>View Customer</Link>
-            </DropdownMenuItem>
             <DropdownMenuItem>Edit Customer</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

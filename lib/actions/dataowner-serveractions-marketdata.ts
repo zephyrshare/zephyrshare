@@ -3,32 +3,21 @@
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import { MarketDataFile, MarketDataSource } from '@prisma/client';
 import { unstable_noStore as noStore } from 'next/cache';
 
-// Functions:
-// 1. getMarketDataSourcesByOrganization
-// 2. updateMarketDataSource
-// 3. deleteMarketDataSourceAndDataFiles
-// 4. addMarketDataSource
-// 5. getMarketDataFilesByMarketDataSource
-// 6. deleteMarketDataFile
-// 7. addMarketDataFile
-// 8. updateMarketDataFile
-
-export async function getMarketDataSourcesByOrganization(): Promise<MarketDataSource[]> {
+export async function getMarketDataSources(): Promise<MarketDataSource[]> {
   const session = await getSession();
-  if (!session?.user.organizationId) {
+  if (!session?.user.dataOwnerId) {
     return [];
   }
 
   noStore(); // Prevent caching of this page
-  console.log('Fetching Market Data Sources for organization:', session.user.organizationId);
+  console.log('Fetching Market Data Sources for Data Owner:', session.user.dataOwnerId);
 
   try {
     const marketDataSources = await prisma.marketDataSource.findMany({
-      where: { organizationId: session.user.organizationId },
+      where: { dataOwnerId: session.user.dataOwnerId },
     });
     return marketDataSources;
   } catch (error) {
@@ -47,7 +36,7 @@ export async function updateMarketDataSource(dataSource: MarketDataSource): Prom
       data: {
         name: dataSource.name,
         description: dataSource.description,
-        organizationId: dataSource.organizationId,
+        dataOwnerId: dataSource.dataOwnerId,
       },
     });
     return updatedDataSource;
@@ -85,16 +74,16 @@ export async function addMarketDataSource(dataSource: MarketDataSource): Promise
   try {
     const session = await getSession();
 
-    if (!session?.user.organizationId) {
-      throw new Error('User not associated with an organization. Cannot add data source.');
+    if (!session?.user.dataOwnerId) {
+      throw new Error('User not associated with an Data Owner Organization. Cannot add data source.');
     }
 
-    const organizationId = session?.user.organizationId;
+    const dataOwnerId = session?.user.dataOwnerId;
     const newDataSource = await prisma.marketDataSource.create({
       data: {
         name: dataSource.name,
         description: dataSource.description,
-        organizationId,
+        dataOwnerId,
       },
     });
 
@@ -107,7 +96,6 @@ export async function addMarketDataSource(dataSource: MarketDataSource): Promise
     throw new Error('Failed to add market data source.');
   }
 }
-
 
 export async function getMarketDataFilesByMarketDataSource(dataSourceId: string): Promise<MarketDataFile[]> {
   console.log('Fetching Market Data Files for data source:', dataSourceId);
@@ -146,7 +134,6 @@ export async function addMarketDataFile(file: MarketDataFile): Promise<MarketDat
         file: file.file,
         contentType: file.contentType,
         uploaderId: file.uploaderId,
-        organizationId: file.organizationId,
         marketDataSourceId: file.marketDataSourceId,
       },
     });
@@ -169,7 +156,6 @@ export async function updateMarketDataFile(file: MarketDataFile): Promise<Market
         file: file.file,
         contentType: file.contentType,
         uploaderId: file.uploaderId,
-        organizationId: file.organizationId,
         marketDataSourceId: file.marketDataSourceId,
       },
     });
@@ -179,4 +165,3 @@ export async function updateMarketDataFile(file: MarketDataFile): Promise<Market
     throw new Error('Failed to update market data file.');
   }
 }
-

@@ -1,5 +1,5 @@
 import PageContainer from '@/components/ui/page-container';
-import { getMarketDataSourcesByOrganization } from '@/lib/actions/dataowner-serveractions';
+import { getMarketDataSources } from '@/lib/actions';
 import { getSession } from '@/lib/auth';
 import AIChat from '@/components/ai-chat';
 import { marketDataSourceTableColumns } from './data-source-table-columns';
@@ -7,7 +7,7 @@ import AddMarketDataButton from '@/components/add-market-data-button';
 import DataTableWithDetailPanel from '@/components/ui/data-table-with-detail-panel';
 
 export default async function Page() {
-  const marketDataSources = await getMarketDataSourcesByOrganization();
+  const marketDataSources = await getMarketDataSources();
   const session = await getSession();
 
   const user = session?.user;

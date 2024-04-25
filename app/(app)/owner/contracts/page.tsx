@@ -1,15 +1,15 @@
 import AddContractDataButton from '@/components/add-contract-data-button';
 import DataTableWithDetailPanel from '@/components/ui/data-table-with-detail-panel';
 import PageContainer from '@/components/ui/page-container';
-import { getDataCustomers, getMarketDataSourcesByOrganization, getDataContractsByOrganization } from '@/lib/actions';
+import { getDataCustomers, getMarketDataSources, getDataContractsOfDataOwner } from '@/lib/actions';
 import { getSession } from '@/lib/auth';
 import { dataContractTableColumns } from './data-contract-table-columns';
 
 export default async function Page() {
   const [marketDataSources, customers, dataContracts] = await Promise.all([
-    getMarketDataSourcesByOrganization(),
+    getMarketDataSources(),
     getDataCustomers(),
-    getDataContractsByOrganization(),
+    getDataContractsOfDataOwner(),
   ]);
 
   const session = await getSession();

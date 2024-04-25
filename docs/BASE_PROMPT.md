@@ -35,9 +35,16 @@ As we embark on developing this web application, it's crucial to adhere to our s
 
 ### Next.js Component Types
 
-- **Server Components** are rendered on the server using the `server` directive and cannot utilize React hooks - this means that `useState` and `useEffect` CANNOT be used in a server component. If `useState` and `useEffect` would like to be used, they can be written in a Client Component that is then imported into the server component. As a note, it's assumed that Next.js components are server components unless otherwise specified. Note, server components must have the "use server" directive at the top of the file. Another note, server components can be defined as async functions and can use the `await` keyword within them to fetch data.
+**Server Components**
 
-- **Client Components** are rendered on the client using the `client` directive and can use React hooks - this means that `useState` and `useEffect` CAN be used in a client component. If `useState` and `useEffect` are not used, the component can usually be written as a Server Component. Note, client components must have the "use client" directive at the top of the file.
+- rendered on the server and must have the "use server" directive at the top of the file
+- CANNOT utilize React hooks like `useState` and `useEffect`
+- can be defined as async functions and can use the `await` keyword within them to fetch data.
+
+**Client Components**
+
+- rendered on the client and must have the "use client" directive at the top of the file
+- CAN utilize React hooks like `useState` and `useEffect`
 
 ### Linking
 
@@ -54,7 +61,3 @@ As we embark on developing this web application, it's crucial to adhere to our s
 ### Deployments and CI/CD
 
 - Utilize **Vercel** (or **GitHub Actions** if needed for something that Vercel cannot do) for CI/CD processes, enhancing workflow efficiency with automated testing and preview deployments.
-
-## Conclusion
-
-This guideline aims to standardize our development process, ensuring efficiency and quality in our web application's development. Staying abreast of the latest updates in our chosen technologies and adopting industry best practices will be key to delivering a robust, user-friendly application.

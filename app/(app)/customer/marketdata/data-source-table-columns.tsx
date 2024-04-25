@@ -1,10 +1,7 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { MarketDataSource, MarketDataFile } from '@prisma/client';
-import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { deleteMarketDataSourceAndDataFiles } from '@/lib/actions/dataowner-serveractions';
+import { MarketDataSource } from '@prisma/client';
 
 export const marketDataSourceTableColumns: ColumnDef<MarketDataSource>[] = [
   {
@@ -18,23 +15,7 @@ export const marketDataSourceTableColumns: ColumnDef<MarketDataSource>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const dataFile = row.original;
-
-      // function handleDelete() {
-      //   deleteMarketDataSourceAndDataFiles(dataFile.id);
-      //   // Update the data table state after deletion
-      // }
-
-      return (
-        <div className="flex space-x-2">
-          {/* <Button variant="outline" size="sm" onClick={() => {}}>
-            Download
-          </Button> */}
-          {/* <Button variant="destructive" size="sm" onClick={handleDelete}>
-            Delete
-          </Button> */}
-        </div>
-      );
+      return <div className="flex space-x-2"></div>;
     },
   },
 ];
