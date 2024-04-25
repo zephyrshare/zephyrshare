@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { deleteOrganization } from '@/lib/actions';
+import { deleteOrganization } from '@/lib/actions/dataowner-serveractions';
 import { Organization } from '@prisma/client';
 
 export const customersTableColumns: ColumnDef<Organization>[] = [

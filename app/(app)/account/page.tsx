@@ -2,7 +2,7 @@ import PageContainer from '@/components/ui/page-container';
 import Form from '@/components/form';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { updateUser } from '@/lib/actions';
+import { updateUser } from '@/lib/actions/dataowner-serveractions';
 import APITokenForm from '@/components/api-token-form';
 
 export default async function AccountPage() {

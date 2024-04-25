@@ -1,6 +1,6 @@
 # Your Task
 
-[Task for the LLM here]
+[Task for the LLM or description of the feature you're trying to build goes here]
 
 # Development Guidelines for Our Next.js 14 React Application
 

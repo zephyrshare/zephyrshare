@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { MarketDataSource, Organization, User } from '@prisma/client';
+import { MarketDataSource, DataCustomer, User } from '@prisma/client';
 import { v4 as uuid } from 'uuid';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,13 +20,13 @@ import {
 import { addMarketDataFile, addMarketDataSource, addDataContract, getS3PresignedUploadUrl } from '@/lib/actions';
 import UploadDropzone from '@/components/upload-dropzone';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from './ui/switch';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Calendar } from './ui/calendar';
-import { Input } from './ui/input';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
 
 const formSchema = z.object({
   marketDataSourceId: z.string().optional(),
@@ -51,7 +51,7 @@ export default function AddContractDataButton({
   customers = [],
 }: {
   user?: User;
-  customers?: Organization[];
+  customers?: DataCustomer[];
   marketDataSources?: MarketDataSource[];
 }) {
   const [open, setOpen] = useState(false);
@@ -77,7 +77,7 @@ export default function AddContractDataButton({
   });
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
-    if (!user?.organizationId) {
+    if (!user?.dataOwnerId) {
       toast.error('User not associated with an organization. Cannot create customer contract.');
       return;
     }
@@ -91,7 +91,7 @@ export default function AddContractDataButton({
       return;
     }
 
-    const organizationId = user?.organizationId;
+    const dataOwnerId = user?.dataOwnerId;
     let marketDataSourceRes;
 
     // Handle upload file in case market data source is not chosen
@@ -105,7 +105,7 @@ export default function AddContractDataButton({
       // type: "application/pdf"
 
       const fileId = uuid();
-      const s3Key = `${organizationId}/${fileId}`;
+      const s3Key = `${dataOwnerId}/${fileId}`;
 
       // Get an AWS S3 Pre-signed file upload URL from the server
       const uploadUrl = await getS3PresignedUploadUrl(s3Key);
@@ -131,7 +131,7 @@ export default function AddContractDataButton({
           id: uuid(),
           name: currentFile.name,
           description: null,
-          organizationId,
+          dataOwnerId,
           createdAt: new Date(),
         });
 
@@ -150,7 +150,7 @@ export default function AddContractDataButton({
           file: s3Key,
           contentType: currentFile.type,
           uploaderId: user.id,
-          organizationId,
+          dataOwnerId,
           marketDataSourceId,
           createdAt: new Date(),
         });
@@ -165,7 +165,7 @@ export default function AddContractDataButton({
 
     try {
       await addDataContract({
-        buyerOrgId: customerId,
+        dataCustomerId: customerId,
         marketDataSourceId: marketDataSourceId!,
         startDate: contractDetails.startDate,
         endDate: contractDetails.endDate,

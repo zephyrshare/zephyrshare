@@ -106,8 +106,6 @@ model CustomerRelationship {
 
 model DataContract {
   id                 String           @id @default(cuid())
-  buyerOrgId         String
-  sellerOrgId        String
   startDate          DateTime?
   endDate            DateTime?
   allowDownload      Boolean          @default(false)

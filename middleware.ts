@@ -41,21 +41,15 @@ export default async function middleware(req: NextRequest) {
     // @ts-ignore: Assume getBaseUrlPath handles the role and returns the correct base URL
     const baseUrlPath = getBaseUrlPath(session.user.role);
 
-    // Redirect an already authenticated user on /login
-    if (path === '/login') {
-      const marketDataUrl = new URL(`${baseUrlPath}/marketdata`, req.url);
-      return NextResponse.redirect(marketDataUrl);
-    }
-
     // Handle routes that do not have a base URL path:
     if (path === '/account') {
       return NextResponse.next();
     }
 
-    if (!path.startsWith(baseUrlPath)) {
-      // Prepend the baseUrlPath to the existing route if it does not start with it
-      const correctedUrl = new URL(`${baseUrlPath}${path}`, req.url);
-      return NextResponse.redirect(correctedUrl);
+    // If the existing path doesn't start with the base URL path OR an authenticated user is on /login, redirect to the "/marketdata" route
+    if (!path.startsWith(baseUrlPath) || path === '/login') {
+      const marketDataUrl = new URL(`${baseUrlPath}/marketdata`, req.url);
+      return NextResponse.redirect(marketDataUrl);
     }
   }
 

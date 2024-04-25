@@ -16,7 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { addMarketDataFile, addMarketDataSource, getS3PresignedUploadUrl } from '@/lib/actions';
+import { addMarketDataFile, addMarketDataSource, getS3PresignedUploadUrl } from '@/lib/actions/dataowner-serveractions';
 import UploadDropzone from '@/components/upload-dropzone';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';

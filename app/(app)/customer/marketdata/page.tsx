@@ -1,5 +1,5 @@
 import PageContainer from '@/components/ui/page-container';
-import { getMarketDataSourcesByOrganization } from '@/lib/actions';
+import { getMarketDataSourcesByOrganization } from '@/lib/actions/dataowner-serveractions';
 import { getSession } from '@/lib/auth';
 import AIChat from '@/components/ai-chat';
 import { marketDataSourceTableColumns } from './data-source-table-columns';

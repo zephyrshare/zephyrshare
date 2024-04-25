@@ -7,7 +7,11 @@ import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import prisma from '@/lib/prisma';
 import { User } from '@prisma/client';
 import { getEmailDomain, getEmailUsername } from '@/lib/utils';
-import { createOrganization, updateUserOnLogin, getOrganizationByEmailDomain } from '@/lib/actions';
+import {
+  createOrganization,
+  updateUserOnLogin,
+  getOrganizationByEmailDomain,
+} from '@/lib/actions/dataowner-serveractions';
 import { DEFAULT_ORG_NAME } from '@/lib/constants';
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
@@ -133,6 +137,12 @@ export const authOptions: NextAuthOptions = {
         organizationId: token?.user?.organizationId,
         // @ts-expect-error
         apiToken: token?.user?.apiToken,
+        // @ts-expect-error
+        dataOwnerId: token?.user?.dataOwnerId,
+        // @ts-expect-error
+        dataCustomerId: token?.user?.dataCustomerId,
+        // @ts-expect-error
+        hasOnboarded: token?.user?.hasOnboarded,
       };
       return session;
     },

@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MarketDataSource, MarketDataFile } from '@prisma/client';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { deleteMarketDataSourceAndDataFiles } from '@/lib/actions';
+import { deleteMarketDataSourceAndDataFiles } from '@/lib/actions/dataowner-serveractions';
 
 export const marketDataSourceTableColumns: ColumnDef<MarketDataSource>[] = [
   {

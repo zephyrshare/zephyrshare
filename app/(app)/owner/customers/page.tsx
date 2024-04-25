@@ -1,6 +1,6 @@
 import PageContainer from '@/components/ui/page-container';
 import { getSession } from '@/lib/auth';
-import { getOrganizations } from '@/lib/actions';
+import { getOrganizations } from '@/lib/actions/dataowner-serveractions';
 import rbac, { Privilege } from '@/lib/user-roles-privileges';
 import DataTableWithDetailPanel from '@/components/ui/data-table-with-detail-panel';
 import { customersTableColumns } from './customers-table-columns';
