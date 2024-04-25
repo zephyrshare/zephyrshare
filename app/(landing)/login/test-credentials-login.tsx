@@ -51,8 +51,8 @@ export default function TestCredentialsLogin() {
       setPassword('');
       setUsernameError(false);
       setPasswordError(false);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

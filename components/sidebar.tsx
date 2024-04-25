@@ -53,7 +53,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
     });
 
     return tabLinks;
-  }, [segments, baseUrlPath, session]);
+  }, [segments, baseUrlPath]);
 
   const [showSidebar, setShowSidebar] = useState(false);
 
