@@ -10,7 +10,6 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'OWNER_ADMIN',
-    "organizationId" TEXT,
     "apiToken" TEXT,
     "hasOnboarded" BOOLEAN NOT NULL DEFAULT false,
     "dataOwnerId" TEXT,
@@ -117,7 +116,6 @@ CREATE TABLE "MarketDataFile" (
     "file" TEXT NOT NULL,
     "contentType" TEXT NOT NULL,
     "uploaderId" TEXT NOT NULL,
-    "organizationId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "marketDataSourceId" TEXT NOT NULL,
 
@@ -129,7 +127,6 @@ CREATE TABLE "MarketDataSource" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
-    "organizationId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
     "dataOwnerId" TEXT,
 
