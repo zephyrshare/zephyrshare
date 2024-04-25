@@ -46,6 +46,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     CredentialsProvider({
+      // The CredentialsProvider is used for testing purposes only and will not insert user rows into the database. This must be done manually.
       name: 'Credentials',
       credentials: {
         username: { label: 'Username', type: 'text' },
@@ -55,8 +56,6 @@ export const authOptions: NextAuthOptions = {
         // Here you would fetch user data from your database
         // And compare the password with the hashed password stored in the database
 
-        console.log('CredentialsProvider', credentials);
-
         if (credentials?.username === 'zonalexchange' && credentials?.password === 'zonalpass') {
           console.log('correct credentialas - returning user');
           // Return a sample user here based on the code and the schema.prisma
@@ -65,10 +64,21 @@ export const authOptions: NextAuthOptions = {
             name: 'Zonal Exchange',
             username: 'zonalexchange',
             email: 'test@zexchange.com',
+            role: 'OWNER_ADMIN',
           };
-        } else {
-          return null;
         }
+
+        if (credentials?.username === 'drwtrader' && credentials?.password === 'drwpass') {
+          return {
+            id: 'qweiojwqef',
+            name: 'DRW Trader',
+            username: 'drwtrader',
+            email: 'trader@drwholdings.com',
+            role: 'CUSTOMER_ADMIN',
+          };
+        }
+
+        return null;
       },
     }),
   ],

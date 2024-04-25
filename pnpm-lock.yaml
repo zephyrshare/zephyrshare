@@ -142,6 +142,9 @@ dependencies:
     version: 3.22.4
 
 devDependencies:
+  '@playwright/test':
+    specifier: ^1.43.1
+    version: 1.43.1
   '@types/node':
     specifier: ^20
     version: 20.11.10
@@ -1587,6 +1590,14 @@ packages:
     engines: {node: '>=14'}
     requiresBuild: true
     optional: true
+
+  /@playwright/test@1.43.1:
+    resolution: {integrity: sha512-HgtQzFgNEEo4TE22K/X7sYTYNqEMMTZmFS8kTq6m8hXj+m1D8TgwgIbumHddJa9h4yl4GkKb8/bgAl2+g7eDgA==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      playwright: 1.43.1
+    dev: true
 
   /@prisma/client@5.8.1(prisma@5.8.1):
     resolution: {integrity: sha512-xQtMPfbIwLlbm0VVIVQY2yqQVOxPwRQhvIp7Z3m2900g1bu/zRHKhYZJQWELqmjl6d8YwBy0K2NvMqh47v1ubw==}
@@ -5328,6 +5339,14 @@ packages:
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
 
+  /fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
   /fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -6576,6 +6595,22 @@ packages:
   /pirates@4.0.6:
     resolution: {integrity: sha512-saLsH7WeYYPiD25LDuLRRY/i+6HaPYr6G1OUlN39otzkSTxKnubR9RTxS3/Kk50s1g2JTgFwWQDQyplC5/SHZg==}
     engines: {node: '>= 6'}
+
+  /playwright-core@1.43.1:
+    resolution: {integrity: sha512-EI36Mto2Vrx6VF7rm708qSnesVQKbxEWvPrfA1IPY6HgczBplDx7ENtx+K2n4kJ41sLLkuGfmb0ZLSSXlDhqPg==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dev: true
+
+  /playwright@1.43.1:
+    resolution: {integrity: sha512-V7SoH0ai2kNt1Md9E3Gwas5B9m8KR2GVvwZnAI6Pg0m3sh7UvgiYhRrhsziCmqMJNouPckiOhk8T+9bSAK0VIA==}
+    engines: {node: '>=16'}
+    hasBin: true
+    dependencies:
+      playwright-core: 1.43.1
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
 
   /postcss-import@15.1.0(postcss@8.4.33):
     resolution: {integrity: sha512-hpr+J05B2FVYUAXHeK1YyI267J/dDDhMU6B6civm8hSY1jYJnBXxzKDKDswzJmtLHryrjhnDjqqp/49t8FALew==}

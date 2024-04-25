@@ -47,7 +47,16 @@ export default async function middleware(req: NextRequest) {
       return NextResponse.redirect(marketDataUrl);
     }
 
-    // TODO: Need logic here to ensure the url begins with the correct role-based url prefix as defined in lib/user-roles-privileges.ts - getBaseUrlPath
+    // Handle routes that do not have a base URL path:
+    if (path === '/account') {
+      return NextResponse.next();
+    }
+
+    if (!path.startsWith(baseUrlPath)) {
+      // Prepend the baseUrlPath to the existing route if it does not start with it
+      const correctedUrl = new URL(`${baseUrlPath}${path}`, req.url);
+      return NextResponse.redirect(correctedUrl);
+    }
   }
 
   return NextResponse.next();

@@ -1,5 +1,47 @@
 ## User Queries
 
+Create a new test user
+
+```
+INSERT INTO "User" (
+  id,
+  name,
+  username,
+  email,
+  role,
+  "createdAt",
+  "updatedAt"
+) VALUES (
+  'aoiefjoiwef',
+  'Zonal Exchange',
+  'zonalexchange',
+  'test@zexchange.com',
+  'OWNER_ADMIN', -- Assuming this is the default role you want to assign
+  NOW(),
+  NOW()
+);
+```
+
+```
+INSERT INTO "User" (
+  id,
+  name,
+  username,
+  email,
+  role,
+  "createdAt",
+  "updatedAt"
+) VALUES (
+  'qweiojwqef',
+  'DRW Trader',
+  'drwtrader',
+  'trader@drwholdings.com',
+  'CUSTOMER_ADMIN', -- Assuming this is the default role you want to assign
+  NOW(),
+  NOW()
+);
+```
+
 ```
 UPDATE "User"
 SET "role" = 'ZEPHYR_ADMIN'

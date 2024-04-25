@@ -6,8 +6,9 @@ ZephyrShare is a financial market data sharing platform and AI-powered contract 
 
 - [ZephyrShare UI Components Documentation](./components/COMPONENTS.md) - Shadcn/ui components and other components
 - [ZephyrShare Auth Documentation](./lib/AUTH.md) - Authentication with NextAuth.js
-- [Prisma Documentation](./prisma/PRISMA.md) - Prisma ORM documentation
-- [Database Queries](./docs/QUERIES.md) - common database queries
+- [ZephyrShare Prisma Documentation](./prisma/PRISMA.md) - Prisma ORM documentation
+- [ZephyrShare Database Queries](./docs/QUERIES.md) - common database queries
+- [ZephyrShare Playwright Documentation](./tests/PLAYWRIGHT.md) - Playwright testing documentation
 
 ## ZephyrShare Business Dictionary
 

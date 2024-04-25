@@ -21,10 +21,14 @@ model User {
   role            String           @default("OWNER_ADMIN")
   organizationId  String?
   apiToken        String?          @unique
+  hasOnboarded    Boolean          @default(false)
   accounts        Account[]
   marketDataFiles MarketDataFile[]
   sessions        Session[]
-  organization    Organization?    @relation(fields: [organizationId], references: [id])
+  dataOwnerId     String?
+  dataOwner       DataOwner?       @relation(fields: [dataOwnerId], references: [id])
+  dataCustomerId  String?
+  dataCustomer    DataCustomer?    @relation(fields: [dataCustomerId], references: [id])
 }
 
 model Account {
@@ -67,24 +71,42 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Organization {
-  id                  String             @id @default(cuid())
-  name                String
-  description         String?
-  logo                String?
-  createdAt           DateTime?          @default(now())
-  role                OrganizationRole   @default(SELLER)
-  emailDomain         String?            @unique
-  buyerDataContracts  DataContract[]     @relation("BuyerDataContracts")
-  sellerDataContracts DataContract[]     @relation("SellerDataContracts")
-  marketDataFiles     MarketDataFile[]
-  marketDataSources   MarketDataSource[]
-  users               User[]
+model DataOwner {
+  id                   String                 @id @default(cuid())
+  name                 String
+  description          String?
+  logo                 String?
+  createdAt            DateTime?              @default(now())
+  emailDomain          String?                @unique
+  dataContracts        DataContract[]
+  marketDataSources    MarketDataSource[]
+  users                User[]
+  CustomerRelationship CustomerRelationship[]
+}
+
+model DataCustomer {
+  id                   String                 @id @default(cuid())
+  name                 String
+  description          String?
+  logo                 String?
+  createdAt            DateTime?              @default(now())
+  emailDomain          String?                @unique
+  dataContracts        DataContract[]
+  users                User[]
+  CustomerRelationship CustomerRelationship[]
+}
+
+model CustomerRelationship {
+  id             String       @id @default(cuid())
+  dataCustomerId String
+  dataCustomer   DataCustomer @relation(fields: [dataCustomerId], references: [id])
+  dataOwnerId    String
+  dataOwner      DataOwner    @relation(fields: [dataOwnerId], references: [id])
+  createdAt      DateTime?    @default(now())
 }
 
 model DataContract {
   id                 String           @id @default(cuid())
-  marketDataSourceId String
   buyerOrgId         String
   sellerOrgId        String
   startDate          DateTime?
@@ -93,9 +115,13 @@ model DataContract {
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
   contractAmount     Float
-  buyerOrganization  Organization     @relation("BuyerDataContracts", fields: [buyerOrgId], references: [id])
+  contractCurrency   String           @default("USD")
+  marketDataSourceId String
+  dataOwnerId        String?
+  dataCustomerId     String?
+  dataOwner          DataOwner?       @relation(fields: [dataOwnerId], references: [id])
+  dataCustomer       DataCustomer?    @relation(fields: [dataCustomerId], references: [id])
   marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
-  sellerOrganization Organization     @relation("SellerDataContracts", fields: [sellerOrgId], references: [id])
 }
 
 model MarketDataFile {
@@ -108,8 +134,7 @@ model MarketDataFile {
   createdAt          DateTime?        @default(now())
   marketDataSourceId String
   marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
-  organization       Organization     @relation(fields: [organizationId], references: [id])
-  uploader           User             @relation(fields: [uploaderId], references: [id])
+  uploadedByUser     User             @relation(fields: [uploaderId], references: [id])
 }
 
 model MarketDataSource {
@@ -120,12 +145,6 @@ model MarketDataSource {
   createdAt       DateTime?        @default(now())
   dataContracts   DataContract[]
   marketDataFiles MarketDataFile[]
-  organization    Organization     @relation(fields: [organizationId], references: [id])
-}
-
-enum OrganizationRole {
-  BUYER
-  SELLER
-  BUYER_SELLER
-  ZEPHYR
+  DataOwner       DataOwner?       @relation(fields: [dataOwnerId], references: [id])
+  dataOwnerId     String?
 }

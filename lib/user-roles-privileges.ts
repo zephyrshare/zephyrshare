@@ -92,7 +92,7 @@ export function getBaseUrlPath(userRole: string) {
     case CustomerRole.CUSTOMER_ADMIN:
     case CustomerRole.CUSTOMER_OPERATOR:
     case CustomerRole.CUSTOMER_VIEWER:
-      return '/cust';
+      return '/customer';
     default:
       return '/';
   }

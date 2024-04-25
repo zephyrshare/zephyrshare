@@ -1,9 +1,10 @@
 'use client';
 
+// TODO - Consider making Sidebar a server component, to prevent exposing all UserRoles to all users
 // TODO - consider the problem of possibly exposing all UserRoles to all users by importing getBaseUrlPath from '@/lib/user-roles-privileges'?
 
 import Link from 'next/link';
-import { Globe, LayoutDashboard, Menu, Newspaper, Settings, HeartHandshake } from 'lucide-react';
+import { Globe, LayoutDashboard, Menu, Settings, HeartHandshake } from 'lucide-react';
 import { usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
@@ -17,7 +18,7 @@ export default function Sidebar({ children }: { children: ReactNode }) {
   const baseUrlPath = getBaseUrlPath(session?.user?.role);
 
   const tabs = useMemo(() => {
-    return [
+    let tabLinks = [
       {
         name: 'Market Data',
         href: `${baseUrlPath}/marketdata`,
@@ -30,20 +31,29 @@ export default function Sidebar({ children }: { children: ReactNode }) {
         isActive: segments.includes('contracts'),
         icon: <HeartHandshake width={18} />,
       },
-      {
+    ];
+
+    if (baseUrlPath === '/owner') {
+      tabLinks.push({
         name: 'Customers',
         href: `${baseUrlPath}/customers`,
         isActive: segments.includes('customers'),
         icon: <Globe width={18} />,
-      },
-      {
-        name: 'Organization Settings',
-        href: `${baseUrlPath}/organizationsettings`,
-        isActive: segments.includes('organizationsettings'),
-        icon: <Settings width={18} />,
-      },
-    ];
-  }, [segments, baseUrlPath]);
+      });
+    } else if (baseUrlPath === '/customer') {
+      // Customer specific tabs
+    }
+
+    // Keep the organization settings tab at the end
+    tabLinks.push({
+      name: 'Organization Settings',
+      href: `${baseUrlPath}/organizationsettings`,
+      isActive: segments.includes('organizationsettings'),
+      icon: <Settings width={18} />,
+    });
+
+    return tabLinks;
+  }, [segments, baseUrlPath, session]);
 
   const [showSidebar, setShowSidebar] = useState(false);
 

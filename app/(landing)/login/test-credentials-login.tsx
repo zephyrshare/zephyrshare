@@ -64,6 +64,7 @@ export default function TestCredentialsLogin() {
           placeholder="Username"
           value={username}
           type="text"
+          name="username"
           onChange={(e) => {
             setUsername(e.target.value);
             setUsernameError(false);
@@ -73,6 +74,7 @@ export default function TestCredentialsLogin() {
           className={`border-2 w-full text-left ${passwordError ? 'border-red-500' : 'border-stone-200'}`}
           placeholder="●●●●●●●●"
           type="password"
+          name="password"
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
@@ -81,6 +83,7 @@ export default function TestCredentialsLogin() {
         />
         <button
           type="submit"
+          name="submit-credentials"
           disabled={loading}
           className={`${
             loading
