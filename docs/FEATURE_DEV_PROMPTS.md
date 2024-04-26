@@ -1,4 +1,10 @@
-# 2024-04-24
+#
+
+# 2024-04-25 MarketDataSources for DataCustomer
+
+I'd like to make sure on the /customer/marketdata page that any DataCustomer logged in can see all MarketDataSources that are made available to them in an active contract. To do this, you should implement the getMarketDataSourcesForDataCustomer function in lib/actions/datacustomer-serveractions-marketdata.ts and call it on app/(app)/customer/marketdata/page.tsx (instead of using getMarketDataSources)
+
+# 2024-04-24 Onboarding flow
 
 Please design a Next.js user onboarding flow with 1 total step. Note, this step will be required.
 

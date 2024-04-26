@@ -2,6 +2,8 @@
 
 [Task for the LLM or description of the feature you're trying to build goes here]
 
+Note, please reference the `prisma/schema.prisma` file to understand the data model and database schema for this project when building out the feature.
+
 # Development Guidelines for Our Next.js 14 React Application
 
 As we embark on developing this web application, it's crucial to adhere to our selected technology stack and coding practices. Please try to follow a code style and structure that is consistent with the existing project. Unless otherwise specified, please ensure the integration of the following technologies:
