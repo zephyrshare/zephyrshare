@@ -18,6 +18,9 @@ export async function getMarketDataSourcesForDataCustomer(): Promise<MarketDataS
     const marketDataSources = await prisma.dataContract.findMany({
       where: {
         dataCustomerId: session.user.dataCustomerId,
+        latestStatus: {
+          statusType: 'ACTIVE',
+        },
         // Assuming there's a way to determine active contracts, e.g., a boolean field or date range
         // isActive: true,
       },

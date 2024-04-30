@@ -5,9 +5,12 @@ import { getSession } from '@/lib/auth';
 import { unstable_noStore as noStore } from 'next/cache';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import { v4 as uuid } from 'uuid';
 
 /**
- * Create new data contract only by a data owner
+ * Create new data contract only by a data owner, with an initial DataContractStatus
+ *
+ * Omitting the dataOwnerId field from the data object, as it will be set from the session
  */
 export const addDataContract = async (data: Omit<Prisma.DataContractUncheckedCreateInput, 'dataOwnerId'>) => {
   const session = await getSession();
@@ -22,15 +25,36 @@ export const addDataContract = async (data: Omit<Prisma.DataContractUncheckedCre
 
   noStore(); // Prevent caching of this page
 
-  await prisma.dataContract.create({
-    data: {
-      ...data,
-      dataOwnerId: session.user.dataOwnerId,
-    },
+  // Start a transaction to ensure both DataContract and DataContractStatus are created atomically
+  const contract = await prisma.$transaction(async (prisma) => {
+    const dataContractStatusId = uuid(); // Generate a new UUID for the data contract status
+    const dataContractId = uuid(); // Generate a new UUID for the data contract
+
+    // Create a new DataContractStatus first
+    await prisma.dataContractStatus.create({
+      data: {
+        id: dataContractStatusId,
+        statusType: 'PENDING_CUSTOMER_ACTION',
+        statusName: 'Pending Customer Action',
+        dataContractId,
+      },
+    });
+
+    // Now create the DataContract and link to the newly created status
+    return prisma.dataContract.create({
+      data: {
+        ...data,
+        id: dataContractId,
+        dataOwnerId: session.user.dataOwnerId,
+        latestStatusId: dataContractStatusId,
+      },
+    });
   });
 
   // Revalidate the contracts page
   revalidatePath('/owner/contracts');
+
+  return contract;
 };
 
 /**

@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "StatusType" AS ENUM ('ACTIVE', 'TERMINATED', 'EXPIRED', 'PENDING_OWNER_ACTION', 'PENDING_CUSTOMER_ACTION');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -103,8 +106,21 @@ CREATE TABLE "DataContract" (
     "marketDataSourceId" TEXT NOT NULL,
     "dataOwnerId" TEXT,
     "dataCustomerId" TEXT,
+    "latestStatusId" TEXT NOT NULL,
 
     CONSTRAINT "DataContract_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "DataContractStatus" (
+    "id" TEXT NOT NULL,
+    "statusType" "StatusType" NOT NULL DEFAULT 'PENDING_CUSTOMER_ACTION',
+    "statusName" TEXT NOT NULL,
+    "statusDescription" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "dataContractId" TEXT NOT NULL,
+
+    CONSTRAINT "DataContractStatus_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -161,6 +177,9 @@ CREATE UNIQUE INDEX "DataOwner_emailDomain_key" ON "DataOwner"("emailDomain");
 -- CreateIndex
 CREATE UNIQUE INDEX "DataCustomer_emailDomain_key" ON "DataCustomer"("emailDomain");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "DataContract_latestStatusId_key" ON "DataContract"("latestStatusId");
+
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_dataOwnerId_fkey" FOREIGN KEY ("dataOwnerId") REFERENCES "DataOwner"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -180,6 +199,9 @@ ALTER TABLE "CustomerRelationship" ADD CONSTRAINT "CustomerRelationship_dataCust
 ALTER TABLE "CustomerRelationship" ADD CONSTRAINT "CustomerRelationship_dataOwnerId_fkey" FOREIGN KEY ("dataOwnerId") REFERENCES "DataOwner"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "DataContract" ADD CONSTRAINT "DataContract_latestStatusId_fkey" FOREIGN KEY ("latestStatusId") REFERENCES "DataContractStatus"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "DataContract" ADD CONSTRAINT "DataContract_dataOwnerId_fkey" FOREIGN KEY ("dataOwnerId") REFERENCES "DataOwner"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -187,6 +209,9 @@ ALTER TABLE "DataContract" ADD CONSTRAINT "DataContract_dataCustomerId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "DataContract" ADD CONSTRAINT "DataContract_marketDataSourceId_fkey" FOREIGN KEY ("marketDataSourceId") REFERENCES "MarketDataSource"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DataContractStatus" ADD CONSTRAINT "DataContractStatus_dataContractId_fkey" FOREIGN KEY ("dataContractId") REFERENCES "DataContract"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MarketDataFile" ADD CONSTRAINT "MarketDataFile_marketDataSourceId_fkey" FOREIGN KEY ("marketDataSourceId") REFERENCES "MarketDataSource"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

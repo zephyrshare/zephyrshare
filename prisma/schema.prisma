@@ -9,7 +9,7 @@ datasource db {
 }
 
 model User {
-  id              String           @id @default(cuid())
+  id              String           @id @default(uuid())
   name            String?
   username        String?
   gh_username     String?
@@ -31,7 +31,7 @@ model User {
 }
 
 model Account {
-  id                       String  @id @default(cuid())
+  id                       String  @id @default(uuid())
   userId                   String
   type                     String
   provider                 String
@@ -53,7 +53,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -71,7 +71,7 @@ model VerificationToken {
 }
 
 model DataOwner {
-  id                   String                 @id @default(cuid())
+  id                   String                 @id @default(uuid())
   name                 String
   description          String?
   logo                 String?
@@ -84,7 +84,7 @@ model DataOwner {
 }
 
 model DataCustomer {
-  id                   String                 @id @default(cuid())
+  id                   String                 @id @default(uuid())
   name                 String
   description          String?
   logo                 String?
@@ -96,7 +96,7 @@ model DataCustomer {
 }
 
 model CustomerRelationship {
-  id             String       @id @default(cuid())
+  id             String       @id @default(uuid())
   dataCustomerId String
   dataCustomer   DataCustomer @relation(fields: [dataCustomerId], references: [id])
   dataOwnerId    String
@@ -105,24 +105,46 @@ model CustomerRelationship {
 }
 
 model DataContract {
-  id                 String           @id @default(cuid())
+  id                 String               @id @default(uuid())
   startDate          DateTime?
   endDate            DateTime?
-  allowDownload      Boolean          @default(false)
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  allowDownload      Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
   contractAmount     Float
-  contractCurrency   String           @default("USD")
+  contractCurrency   String               @default("USD")
   marketDataSourceId String
   dataOwnerId        String?
   dataCustomerId     String?
-  dataOwner          DataOwner?       @relation(fields: [dataOwnerId], references: [id])
-  dataCustomer       DataCustomer?    @relation(fields: [dataCustomerId], references: [id])
-  marketDataSource   MarketDataSource @relation(fields: [marketDataSourceId], references: [id])
+  latestStatusId     String               @unique
+  latestStatus       DataContractStatus   @relation(name: "LatestStatus", fields: [latestStatusId], references: [id])
+  statuses           DataContractStatus[] @relation(name: "AllStatuses")
+  dataOwner          DataOwner?           @relation(fields: [dataOwnerId], references: [id])
+  dataCustomer       DataCustomer?        @relation(fields: [dataCustomerId], references: [id])
+  marketDataSource   MarketDataSource     @relation(fields: [marketDataSourceId], references: [id])
+}
+
+model DataContractStatus {
+  id                   String        @id @default(uuid())
+  statusType           StatusType    @default(PENDING_CUSTOMER_ACTION)
+  statusName           String
+  statusDescription    String?
+  createdAt            DateTime      @default(now())
+  dataContractId       String
+  dataContract         DataContract  @relation(name: "AllStatuses", fields: [dataContractId], references: [id])
+  dataContractAsLatest DataContract? @relation(name: "LatestStatus")
+}
+
+enum StatusType {
+  ACTIVE
+  TERMINATED
+  EXPIRED
+  PENDING_OWNER_ACTION
+  PENDING_CUSTOMER_ACTION
 }
 
 model MarketDataFile {
-  id                 String           @id @default(cuid())
+  id                 String           @id @default(uuid())
   name               String
   file               String
   contentType        String
@@ -134,7 +156,7 @@ model MarketDataFile {
 }
 
 model MarketDataSource {
-  id              String           @id @default(cuid())
+  id              String           @id @default(uuid())
   name            String
   description     String?
   createdAt       DateTime?        @default(now())

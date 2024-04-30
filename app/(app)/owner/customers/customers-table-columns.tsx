@@ -17,12 +17,8 @@ export const customersTableColumns: ColumnDef<any>[] = [
     accessorKey: 'name',
     header: 'Organization Name',
     cell: ({ row }) => {
-      // const customer = row.original;
-      // return (
-      //   <Link href={`customers/${customer.id}`}>
-      //     <div>{customer.name}</div>
-      //   </Link>
-      // );
+      const customer = row.original;
+      return <div>{customer.name}</div>;
     },
   },
   {
