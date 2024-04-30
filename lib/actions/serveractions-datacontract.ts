@@ -12,7 +12,9 @@ import { v4 as uuid } from 'uuid';
  *
  * Omitting the dataOwnerId field from the data object, as it will be set from the session
  */
-export const addDataContract = async (data: Omit<Prisma.DataContractUncheckedCreateInput, 'dataOwnerId'>) => {
+export const addDataContract = async (
+  data: Omit<Prisma.DataContractUncheckedCreateInput, 'dataOwnerId' | 'latestStatusId'>
+) => {
   const session = await getSession();
 
   if (!session?.user.id) {
