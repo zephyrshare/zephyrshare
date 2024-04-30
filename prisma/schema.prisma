@@ -116,8 +116,8 @@ model DataContract {
   marketDataSourceId String
   dataOwnerId        String?
   dataCustomerId     String?
-  latestStatusId     String               @unique
-  latestStatus       DataContractStatus   @relation(name: "LatestStatus", fields: [latestStatusId], references: [id])
+  latestStatusId     String?              @unique
+  latestStatus       DataContractStatus?  @relation(name: "LatestStatus", fields: [latestStatusId], references: [id])
   statuses           DataContractStatus[] @relation(name: "AllStatuses")
   dataOwner          DataOwner?           @relation(fields: [dataOwnerId], references: [id])
   dataCustomer       DataCustomer?        @relation(fields: [dataCustomerId], references: [id])

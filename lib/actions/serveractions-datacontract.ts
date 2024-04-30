@@ -27,36 +27,40 @@ export const addDataContract = async (
 
   noStore(); // Prevent caching of this page
 
-  // Start a transaction to ensure both DataContract and DataContractStatus are created atomically
-  const contract = await prisma.$transaction(async (prisma) => {
-    const dataContractStatusId = uuid(); // Generate a new UUID for the data contract status
-    const dataContractId = uuid(); // Generate a new UUID for the data contract
+  const dataContractStatusId = uuid(); // Generate a new UUID for the data contract status
+  const dataContractId = uuid(); // Generate a new UUID for the data contract
 
-    // Create a new DataContractStatus first
-    await prisma.dataContractStatus.create({
-      data: {
-        id: dataContractStatusId,
-        statusType: 'PENDING_CUSTOMER_ACTION',
-        statusName: 'Pending Customer Action',
-        dataContractId,
-      },
-    });
+  // 1. Create a new DataContract first
+  await prisma.dataContract.create({
+    data: {
+      ...data,
+      id: dataContractId,
+      dataOwnerId: session.user.dataOwnerId,
+    },
+  });
 
-    // Now create the DataContract and link to the newly created status
-    return prisma.dataContract.create({
-      data: {
-        ...data,
-        id: dataContractId,
-        dataOwnerId: session.user.dataOwnerId,
-        latestStatusId: dataContractStatusId,
-      },
-    });
+  // 2. Create a new DataContractStatus next
+  await prisma.dataContractStatus.create({
+    data: {
+      id: dataContractStatusId,
+      statusType: 'PENDING_CUSTOMER_ACTION',
+      statusName: 'Pending Customer Action',
+      dataContractId,
+    },
+  });
+
+  // 3. Update the data contract with the latestStatusId
+  await prisma.dataContract.update({
+    where: {
+      id: dataContractId,
+    },
+    data: {
+      latestStatusId: dataContractStatusId,
+    },
   });
 
   // Revalidate the contracts page
   revalidatePath('/owner/contracts');
-
-  return contract;
 };
 
 /**
