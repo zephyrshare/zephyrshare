@@ -117,6 +117,7 @@ model DataContract {
   dataOwnerId        String?
   dataCustomerId     String?
   latestStatusId     String?              @unique
+  latestStatusType   StatusType?
   latestStatus       DataContractStatus?  @relation(name: "LatestStatus", fields: [latestStatusId], references: [id])
   statuses           DataContractStatus[] @relation(name: "AllStatuses")
   dataOwner          DataOwner?           @relation(fields: [dataOwnerId], references: [id])

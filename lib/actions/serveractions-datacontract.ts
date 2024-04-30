@@ -11,10 +11,10 @@ import { v4 as uuid } from 'uuid';
  * Create new data contract only by a data owner, with an initial DataContractStatus
  *
  * Omitting the dataOwnerId field from the data object, as it will be set from the session
+ *
+ * TODO: confirm this 3 step approach to adding 2 rows with a foreign key relationship is correct
  */
-export const addDataContract = async (
-  data: Omit<Prisma.DataContractUncheckedCreateInput, 'dataOwnerId' | 'latestStatusId'>
-) => {
+export const addDataContract = async (data: Omit<Prisma.DataContractUncheckedCreateInput, 'dataOwnerId'>) => {
   const session = await getSession();
 
   if (!session?.user.id) {
@@ -56,6 +56,7 @@ export const addDataContract = async (
     },
     data: {
       latestStatusId: dataContractStatusId,
+      latestStatusType: 'PENDING_CUSTOMER_ACTION',
     },
   });
 
