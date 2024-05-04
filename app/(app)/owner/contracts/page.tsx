@@ -3,7 +3,7 @@ import DataTableWithDetailPanel from '@/components/ui/data-table-with-detail-pan
 import PageContainer from '@/components/ui/page-container';
 import { getDataCustomers, getMarketDataSources, getDataContractsOfDataOwner } from '@/lib/actions';
 import { getSession } from '@/lib/auth';
-import { dataContractTableColumns } from './data-contract-table-columns';
+import { dataOwnerContractTableColumns } from './data-owner-contract-table-columns';
 
 export default async function Page() {
   const [marketDataSources, customers, dataContracts] = await Promise.all([
@@ -22,7 +22,7 @@ export default async function Page() {
       <div className="flex flex-col w-full">
         <AddContractDataButton user={user} marketDataSources={marketDataSources} customers={customers} />
       </div>
-      <DataTableWithDetailPanel columns={dataContractTableColumns} data={dataContracts} />
+      <DataTableWithDetailPanel columns={dataOwnerContractTableColumns} data={dataContracts} />
     </PageContainer>
   );
 }

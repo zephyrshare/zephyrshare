@@ -1,0 +1,8 @@
+// Corresponds to StatusType in the database
+export enum ContractStatusType {
+  ACTIVE = 'ACTIVE',
+  TERMINATED = 'TERMINATED',
+  EXPIRED = 'EXPIRED',
+  PENDING_OWNER_ACTION = 'PENDING_OWNER_ACTION',
+  PENDING_CUSTOMER_ACTION = 'PENDING_CUSTOMER_ACTION',
+}

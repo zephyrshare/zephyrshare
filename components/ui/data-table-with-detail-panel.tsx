@@ -28,14 +28,21 @@ export default function DataTableWithDetailPanel<TData, TValue>({ columns, data 
 
   const handleRowClick = (item: TData) => {
     setSelectedItem(item);
+    // print selected item to console formatted as JSON
+    console.log('Selected', JSON.stringify(item, null, 2));
     setPanelOpenWidth(DEFAULT_PANEL_OPEN_WIDTH);
+  };
+
+  const handlePanelClose = () => {
+    setPanelOpenWidth(PANEL_CLOSED_WIDTH);
+    setSelectedItem(null);
   };
 
   // Effect to handle the Escape key press
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && panelOpenWidth > 0) {
-        setPanelOpenWidth(PANEL_CLOSED_WIDTH);
+        handlePanelClose();
       }
     };
 
@@ -73,7 +80,7 @@ export default function DataTableWithDetailPanel<TData, TValue>({ columns, data 
               <div className="flex flex-row">
                 <button
                   className="text-gray-500 dark:text-gray-400 hover:text-gray-400 dark:hover:text-gray-300 text-md"
-                  onClick={() => setPanelOpenWidth(PANEL_CLOSED_WIDTH)}
+                  onClick={handlePanelClose}
                 >
                   close
                 </button>
@@ -87,11 +94,11 @@ export default function DataTableWithDetailPanel<TData, TValue>({ columns, data 
             <div className="flex flex-1 overflow-y-auto">
               <div className="flex-1 p-4">
                 {/* Dynamic content based on selected item */}
-                <h2 className="text-lg font-medium dark:text-white">Details</h2>
-                {selectedItem &&
+                {/* <h2 className="text-lg font-medium dark:text-white">Details</h2> */}
+                {/* {selectedItem &&
                   Object.entries(selectedItem).map(([key, value]) => (
                     <p key={key} className="text-gray-500 dark:text-gray-400">{`${key}: ${value}`}</p>
-                  ))}
+                  ))} */}
               </div>
             </div>
           </div>

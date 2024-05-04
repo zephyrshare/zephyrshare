@@ -1,19 +1,18 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { ContractStatusType } from '@/lib/types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-
 /**
  * Sleep
- * 
+ *
  */
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-
 
 /**
  *
@@ -45,7 +44,6 @@ export function fileSizeFromBytes(bytes: number, decimals: number = 2): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-
 export function getEmailDomain(email: string | undefined | null): string {
   if (!email) return '';
   return email.split('@')[1];
@@ -54,4 +52,21 @@ export function getEmailDomain(email: string | undefined | null): string {
 export function getEmailUsername(email: string | undefined | null): string {
   if (!email) return '';
   return email.split('@')[0];
+}
+
+export function getContractStatusNamefromStatusType(status: ContractStatusType): string {
+  switch (status) {
+    case ContractStatusType.ACTIVE:
+      return 'Active';
+    case ContractStatusType.TERMINATED:
+      return 'Terminated';
+    case ContractStatusType.EXPIRED:
+      return 'Expired';
+    case ContractStatusType.PENDING_OWNER_ACTION:
+      return 'Pending Owner Action';
+    case ContractStatusType.PENDING_CUSTOMER_ACTION:
+      return 'Pending Customer Action';
+    default:
+      return 'No Status';
+  }
 }

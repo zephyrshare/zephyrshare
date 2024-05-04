@@ -81,6 +81,23 @@ export const getDataContractsOfDataOwner = async () => {
     where: {
       dataOwnerId: session.user.dataOwnerId,
     },
+    include: {
+      dataOwner: {
+        select: {
+          name: true,
+        },
+      },
+      dataCustomer: {
+        select: {
+          name: true,
+        },
+      },
+      marketDataSource: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 };
 
@@ -100,6 +117,23 @@ export const getDataContractsOfDataCustomer = async () => {
   return prisma.dataContract.findMany({
     where: {
       dataCustomerId: session.user.dataCustomerId,
+    },
+    include: {
+      dataOwner: {
+        select: {
+          name: true,
+        },
+      },
+      dataCustomer: {
+        select: {
+          name: true,
+        },
+      },
+      marketDataSource: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 };
